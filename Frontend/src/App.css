@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+.sidebar-link {
+  @apply px-4 py-2 rounded hover:bg-blue-100 font-medium;
+}
