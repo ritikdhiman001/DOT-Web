@@ -11,7 +11,7 @@ const EditCourse = ({ course, close, setCourses }) => {
     price: course.price || "",
   });
 
-  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(course.image || "");
   const [preview, setPreview] = useState("");
 
   // load existing image
@@ -31,28 +31,43 @@ const EditCourse = ({ course, close, setCourses }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "DOT_Images");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dpqggtyjw/image/upload",
+        {
+          method: "POST",
+          body: data,
+        },
+      );
+      const result = await res.json();
+
+      setImageUrl(result.secure_url);
+      setPreview(result.secure_url);
+    } catch (error) {
+      console.error("Cloudinary upload failed", error);
+    }
   };
 
   const handleUpdate = async () => {
     try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("type", formData.type);
-      data.append("price", formData.price);
-
-      if (image) {
-        data.append("image", image);
-      }
+      const payload = {
+        title: formData.title,
+        type: formData.type,
+        price: formData.price,
+        image: imageUrl,
+      };
 
       const res = await axios.put(
         `http://localhost:5000/api/admin/updateCourse/${course.id}`,
-        data,
+        payload,
       );
 
       setCourses((prev) =>

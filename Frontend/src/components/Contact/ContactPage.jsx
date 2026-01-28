@@ -1,5 +1,4 @@
 import React from "react";
-import contactBanner from "/ContactHero.jpg";
 import ContactDetails from "./ContactDetails";
 
 const ContactPage = () => {
@@ -8,7 +7,7 @@ const ContactPage = () => {
       <section className="relative w-full h-screen overflow-hidden">
         <div className="w-full -z-10">
           <img
-            src={contactBanner}
+            src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769586550/ContactHero_ikazjd.jpg"
             alt="img"
             className="w-full h-screen object-cover"
           />

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Search, Filter } from "lucide-react";
-import couresImg from "/CoursesHeroBG.png";
 import ContactTeam from "../Contact/ContactTeam";
 import Footer from "../Navbar-Footer/Footer";
 import axios from "axios";
@@ -41,7 +40,7 @@ const CoursesPage = () => {
     <div className="min-h-screen bg-white">
       <section className="relative h-screen">
         <img
-          src={couresImg}
+          src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769586421/CoursesHeroBG_laijac.png"
           alt="img"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -105,9 +104,12 @@ const CoursesPage = () => {
                 className="rounded-2xl border shadow-sm hover:shadow-md transition"
               >
                 <img
-                  src={`http://localhost:5000/uploads/courses/${course.image}`}
+                  src={course.image}
                   alt={course.title}
                   className="h-40 w-full object-cover rounded-t-2xl"
+                  onError={(e) =>
+                    (e.target.src = "https://via.placeholder.com/400x200")
+                  }
                 />
 
                 <div className="p-5">

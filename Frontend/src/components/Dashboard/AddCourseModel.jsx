@@ -6,7 +6,8 @@ import { useRef } from "react";
 
 const AddCourseModal = ({ close, refresh }) => {
   const fileRef = useRef(null);
-  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [preview, setPreview] = useState("");
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -14,14 +15,45 @@ const AddCourseModal = ({ close, refresh }) => {
     type: "Free",
   });
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "DOT_Images");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dpqggtyjw/image/upload",
+        {
+          method: "POST",
+          body: data,
+        },
+      );
+
+      const result = await res.json();
+
+      setImageUrl(result.secure_url); // ✅ save URL
+      setPreview(result.secure_url); // ✅ preview
+    } catch (err) {
+      console.error("Cloudinary upload failed", err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const fd = new FormData();
-    Object.keys(form).forEach((key) => fd.append(key, form[key]));
-    fd.append("image", image);
+    if (!imageUrl) {
+      alert("Please upload an image");
+      return;
+    }
 
-    await axios.post("http://localhost:5000/api/admin/courses", fd);
+    await axios.post("http://localhost:5000/api/admin/courses", {
+      ...form,
+      image: imageUrl,
+      price: form.type === "Free" ? 0 : form.price,
+    });
 
     refresh();
     close();
@@ -72,9 +104,18 @@ const AddCourseModal = ({ close, refresh }) => {
               type="file"
               ref={fileRef}
               accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={handleImageChange}
               className="hidden"
             />
+
+            {preview && (
+              <img
+                src={preview}
+                alt="preview"
+                className="w-32 h-32 object-cover rounded border"
+              />
+            )}
+
             <button
               type="button"
               onClick={() => fileRef.current.click()}
@@ -82,14 +123,6 @@ const AddCourseModal = ({ close, refresh }) => {
             >
               <Upload size={18} Upload Image />
             </button>
-
-            {image && (
-              <img
-                src={URL.createObjectURL(image)}
-                alt="preview"
-                className=" w-32 h-32 object-cover rounded border"
-              />
-            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">

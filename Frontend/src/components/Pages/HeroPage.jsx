@@ -2,8 +2,6 @@ import { HiOutlineArrowSmallRight } from "react-icons/hi2";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import banner1 from "/Homehero1.png";
-import banner2 from "/Homehero2.png";
 import Company from "../Company/Company";
 import { Link } from "react-router-dom";
 import ContectTeam from "../Contact/ContactTeam";
@@ -36,12 +34,12 @@ const HeroPage = () => {
         <div className="w-full -z-10">
           <Slider {...settings} className="-z-10">
             <img
-              src={banner1}
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769585357/Homehero1_q79ckk.png"
               alt="Hero 1"
               className="w-full h-screen object-cover"
             />
             <img
-              src={banner2}
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769585476/Homehero2_ycgf1l.png"
               alt="Hero 2"
               className="w-full h-screen object-cover"
             />

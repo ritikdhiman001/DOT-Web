@@ -30,7 +30,7 @@ const CourseTable = ({ courses, onDelete, onEdit }) => {
 
               <td className="p-3">
                 <img
-                  src={`http://localhost:5000/uploads/courses/${course.image}`}
+                  src={course.image}
                   alt={course.title}
                   className="h-12 w-16 object-cover rounded"
                   onError={(e) =>

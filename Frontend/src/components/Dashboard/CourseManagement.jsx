@@ -10,6 +10,7 @@ const CourseManagement = () => {
   const [open, setOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleEdit = (course) => {
     setSelectedCourse(course);
@@ -24,6 +25,8 @@ const CourseManagement = () => {
       setCourses(res.data.data);
     } catch (error) {
       console.error("Faild to fetch courses", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -52,6 +55,7 @@ const CourseManagement = () => {
         courses={courses}
         onDelete={deleteCourse}
         onEdit={handleEdit}
+        loading={loading}
       />
 
       {open && (
