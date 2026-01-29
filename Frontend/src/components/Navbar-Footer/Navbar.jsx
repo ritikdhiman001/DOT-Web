@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { IoCart, IoMenu, IoClose } from "react-icons/io5";
-import logo from "/logo.png";
 import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
@@ -10,7 +9,7 @@ const Navbar = () => {
     <nav className="absolute top-0 left-0 w-full z-50 bg-white rounded-b-3xl ">
       <div className="flex justify-between items-center px-4 md:px-10 h-full rounded-b-3xl">
         <Link to="/">
-          <img src={logo} alt="logo" className="w-15 md:w-32 cursor-pointer" />
+          <img src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667839/logo_rrppc3.webp" alt="logo" className="w-15 md:w-32 cursor-pointer" />
         </Link>
         <div className="hidden md:flex gap-10 border px-6 py-3 rounded-full">
           <Link to="/" className="hover:text-blue-900">

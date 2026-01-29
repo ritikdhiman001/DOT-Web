@@ -1,32 +1,22 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  dotNumber String
-  firstName String
-  email     String @unique
-  phone     String
-  password  String
+  id          String  @id @default(uuid())
+  dotNumber   String  @unique
+  email       String  @unique
+  password    String
+  firstName   String
+  lastName    String?
+  phone       String
+  companyName String?
 
-  // optional fields 
-  lastName    String
-  companyName String
-
-  // Meta Fields
   role     Role    @default(USER)
   isActive Boolean @default(true)
 
@@ -35,7 +25,7 @@ model User {
 }
 
 enum Role {
-  USER  
+  USER
   ADMIN
 }
 
@@ -55,7 +45,7 @@ model Course {
   title       String
   description String
   price       Int
-  type        String   // Free | Paid
+  type        String // Free | Paid
   image       String
   createdAt   DateTime @default(now())
 }

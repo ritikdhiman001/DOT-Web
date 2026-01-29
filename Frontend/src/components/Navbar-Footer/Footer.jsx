@@ -1,14 +1,17 @@
 import React from "react";
-import { ArrowRight, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
-import logofooter from "/logofooter.svg";
 const Footer = () => {
   return (
     <footer className="">
       <div className="bg-[#050F2C] text-white py-16 px-6">
         <div className="max-w-7xl mx-auto flex justify-between">
           <div>
-            <img src={logofooter} alt="DOT Council" className="w-32 mb-4" />
+            <img
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667900/logofooter_xtk7u1.svg"
+              alt="DOT Council"
+              className="w-32 mb-4"
+            />
             <p className="text-sm leading-relaxed max-w-sm">
               Leading provider of DOT compliance training for transportation
               companies. Ensuring safety and regulatory compliance across the

@@ -1,4 +1,3 @@
-import ContactForm from "/ContactForm.png";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import Footer from "../Navbar-Footer/Footer";
 import { useState } from "react";

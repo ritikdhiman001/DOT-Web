@@ -14,7 +14,6 @@ const Dashboard = () => {
         const res = await axios.get(
           "http://localhost:5000/api/admin/dashboard-stats",
         );
-        console.log(res.data.data);
 
         setStats(res.data.data);
       } catch (error) {

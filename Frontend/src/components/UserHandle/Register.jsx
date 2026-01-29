@@ -59,6 +59,50 @@ const Register = () => {
       }
     }
   };
+  const handleDotSearch = async () => {
+    if (!formData.dotNumber) {
+      toast.error("Please enter DOT number");
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        "https://data.transportation.gov/resource/az4n-8mr2.json",
+        {
+          params: { dot_number: formData.dotNumber },
+        },
+      );
+
+      if (!res.data || res.data.length === 0) {
+        toast.error("No record found for this DOT number");
+        return;
+      }
+
+      const dotData = res.data[0];
+
+      // Split legal_name into first/last parts
+      const companyName = dotData.legal_name || "";
+      const parts = companyName.split(" ");
+      const firstName = parts.shift() || "";
+      const lastName = parts.join(" ") || "";
+
+      setFormData((prev) => ({
+        ...prev,
+        // Fill firstName/lastName from company name
+        firstName,
+        lastName,
+        // Keep companyName separate if you want it also
+        companyName,
+        phone: dotData.phone || "",
+        email: dotData.email_address || "",
+      }));
+
+      toast.success("DOT details fetched successfully");
+    } catch {
+      toast.error("Failed to fetch DOT details");
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -96,6 +140,7 @@ const Register = () => {
 
                   <button
                     type="button"
+                    onClick={handleDotSearch}
                     className="bg-blue-600 text-center px-3 py-3 text-white rounded-xl cursor-pointer"
                   >
                     <IoSearch />
