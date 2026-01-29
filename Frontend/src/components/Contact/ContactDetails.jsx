@@ -27,12 +27,19 @@ const ContactDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     try {
       const res = await axios.post(
         "http://localhost:5000/api/contact",
         formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
+
       toast.success(res.data.message);
       setFormData({
         fullName: "",
@@ -208,7 +215,7 @@ const ContactDetails = () => {
           </div>
           <div className="space-y-6 ">
             <img
-              src={ContactForm}
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769666999/ContactForm_xsp73d.png"
               alt="Support Team"
               className="rounded-xl w-full object-cover"
             />

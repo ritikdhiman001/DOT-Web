@@ -1,5 +1,4 @@
 import { useState } from "react";
-import driverImg from "/Login1.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -30,6 +29,7 @@ const Login = () => {
     try {
       const res = await axios.post("http://localhost:5000/api/login", formData);
 
+      localStorage.setItem("token", res.data.token);
       toast.success(res.data.message);
 
       setFormData({
@@ -55,7 +55,7 @@ const Login = () => {
         <div className="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
           <div className="hidden md:block">
             <img
-              src={driverImg}
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769593875/Login1_ave8la.png"
               alt="driver Img"
               className=" h-full w-full object-cover"
             />

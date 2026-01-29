@@ -1,8 +1,3 @@
-import comp1 from "/carousel1.png";
-import comp2 from "/carousel2.png";
-import comp3 from "/carousel3.png";
-import comp4 from "/carousel4.png";
-import comp6 from "/carousel6.png";
 import DetailPage from "./DetailPage";
 import Slider from "react-slick";
 
@@ -20,27 +15,32 @@ const Company = () => {
   const companies = [
     {
       id: 1,
-      src: comp1,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667095/carousel1_m1paur.png",
       alt: "company 1",
     },
     {
       id: 2,
-      src: comp2,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667368/carousel2_sw7gbm.png",
       alt: "company 2",
     },
     {
       id: 3,
-      src: comp3,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667381/carousel3_wt0vwm.png",
       alt: "company 3",
     },
     {
       id: 4,
-      src: comp4,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667380/carousel4_qjkmkr.png",
+      alt: "company 4",
+    },
+    {
+      id: 5,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667381/carousel5_e6wffe.png",
       alt: "company 4",
     },
     {
       id: 6,
-      src: comp6,
+      src: "https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667380/carousel6_i8svdb.png",
       alt: "company 6",
     },
   ];

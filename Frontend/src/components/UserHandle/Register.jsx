@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import driverImg from "/Login1.png";
 import { Link, useNavigate } from "react-router-dom";
 import { IoSearch } from "react-icons/io5";
 import axios from "axios";
@@ -252,7 +251,7 @@ const Register = () => {
 
           <div className="w-115">
             <img
-              src={driverImg}
+              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769593875/Login1_ave8la.png"
               alt="img"
               className="h-full w-full object-cover rounded-r-2xl"
             />
