@@ -3,6 +3,7 @@ import axios from "axios";
 import { X } from "lucide-react";
 import { Upload } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 
 const AddCourseModal = ({ close, refresh }) => {
   const fileRef = useRef(null);
@@ -49,14 +50,31 @@ const AddCourseModal = ({ close, refresh }) => {
       return;
     }
 
-    await axios.post("http://localhost:5000/api/admin/courses", {
-      ...form,
-      image: imageUrl,
-      price: form.type === "Free" ? 0 : form.price,
-    });
+    try {
+      await axios.post(
+        "http://localhost:5000/api/admin/courses",
+        {
+          ...form,
+          image: imageUrl,
+          price: form.type === "Free" ? 0 : form.price,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+          },
+        },
+      );
 
-    refresh();
-    close();
+      refresh();
+      close();
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("AdminToken");
+        window.location.href = "/admin/login";
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
   };
 
   return (

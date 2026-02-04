@@ -6,6 +6,9 @@ import Company from "../Company/Company";
 import { Link } from "react-router-dom";
 import ContectTeam from "../Contact/ContactTeam";
 import Footer from "../Navbar-Footer/Footer";
+import MandatoryCourse from "../Courses/MandatoryCourse";
+import ComplianceServices from "../CompliancePages/ComplianceServices";
+import CompliancePage from "../CompliancePages/CompliancePage";
 
 const HeroPage = () => {
   const settings = {
@@ -78,9 +81,9 @@ const HeroPage = () => {
         {/* Stats Section */}
       </section>
       <div className="max-w-[90%] mt-10 md:-mt-17.75 mx-auto my-0 mb-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-[#f0f6fc] py-10 px-6 rounded-[40px] shadow-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-[#f0f6fc] py-10 px-6 rounded-[40px] shadow-lg ">
           {state.map((stat, id) => (
-            <div key={id} className="text-center">
+            <div key={id} className="text-center ">
               <h3 className="font-bold text-lg md:text-3xl mb-1">
                 {stat.value}
               </h3>
@@ -90,6 +93,9 @@ const HeroPage = () => {
         </div>
       </div>
       <Company />
+      <MandatoryCourse />
+      <ComplianceServices />
+      <CompliancePage />
       <ContectTeam />
       <Footer />
     </>

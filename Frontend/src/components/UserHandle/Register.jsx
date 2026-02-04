@@ -80,7 +80,6 @@ const Register = () => {
 
       const dotData = res.data[0];
 
-      // Split legal_name into first/last parts
       const companyName = dotData.legal_name || "";
       const parts = companyName.split(" ");
       const firstName = parts.shift() || "";
@@ -88,10 +87,8 @@ const Register = () => {
 
       setFormData((prev) => ({
         ...prev,
-        // Fill firstName/lastName from company name
         firstName,
         lastName,
-        // Keep companyName separate if you want it also
         companyName,
         phone: dotData.phone || "",
         email: dotData.email_address || "",

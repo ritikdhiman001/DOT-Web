@@ -29,11 +29,21 @@ const EditUserModal = ({ user, close, refresh }) => {
       await axios.put(
         `http://localhost:5000/api/admin/updateUser/${user.id}`,
         formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+          },
+        },
       );
       refresh();
       close();
     } catch (error) {
-      console.error("Failed to update user", error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("AdminToken");
+        window.location.href = "/admin/login";
+      } else {
+        console.error("Failed to update user", error);
+      }
     }
   };
 

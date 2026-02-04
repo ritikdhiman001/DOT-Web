@@ -98,8 +98,6 @@ export const updateCourse = async (req, res) => {
       data: updatedCourse,
     });
   } catch (error) {
-    onsole.error("UPDATE COURSE ERROR:", error);
-
     return res.status(500).json({
       success: false,
       message: error.message,

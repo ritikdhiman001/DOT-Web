@@ -32,7 +32,7 @@ export const deleteUser = async (req, res) => {
 
     const deleteUser = await prisma.user.delete({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
     return res.status(200).json({
@@ -54,7 +54,7 @@ export const editUser = async (req, res) => {
     const { firstName, lastName, phone, companyName } = req.body;
 
     const updatedUser = await prisma.user.update({
-      where: { id: Number(id) },
+      where: { id: id },
       data: {
         firstName,
         lastName,

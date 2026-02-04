@@ -1,9 +1,15 @@
+import { Navigate, Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
+  const token = localStorage.getItem("AdminToken");
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <main className="p-6 overflow-y-auto">

@@ -101,12 +101,12 @@ const CoursesPage = () => {
             {filteredCourses.map((course) => (
               <div
                 key={course.id}
-                className="rounded-2xl border shadow-sm hover:shadow-md transition"
+                className="rounded-2xl border-2 border-gray-400 hover:border-gray-600 hover:scale-110 transition-all"
               >
                 <img
                   src={course.image}
                   alt={course.title}
-                  className="h-40 w-full object-cover rounded-t-2xl"
+                  className="h-50 w-full object-cover rounded-t-2xl"
                   onError={(e) =>
                     (e.target.src = "https://via.placeholder.com/400x200")
                   }

@@ -39,7 +39,7 @@ const DetailPage = () => {
         {cardData.map((item) => (
           <div
             key={item.id}
-            className="flex flex-col  items-center text-center p-6 bg-[#f0f7ff] rounded-4xl border border-black mb-7"
+            className="flex flex-col items-center text-center p-6 bg-[#f0f7ff] rounded-2xl border-2 border-gray-400 hover:border-gray-600 hover:scale-110 transition-all"
           >
             <div className="w-16 h-16 bg-[#dee9ff] rounded-full flex items-center justify-center mb-6">
               {item.icon}

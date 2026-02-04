@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Upload } from "lucide-react";
 
 const EditCourse = ({ course, close, setCourses }) => {
@@ -12,14 +12,7 @@ const EditCourse = ({ course, close, setCourses }) => {
   });
 
   const [imageUrl, setImageUrl] = useState(course.image || "");
-  const [preview, setPreview] = useState("");
-
-  // load existing image
-  useEffect(() => {
-    if (course.image) {
-      setPreview(`http://localhost:5000/uploads/courses/${course.image}`);
-    }
-  }, [course]);
+  const [preview, setPreview] = useState(course.image || "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +61,11 @@ const EditCourse = ({ course, close, setCourses }) => {
       const res = await axios.put(
         `http://localhost:5000/api/admin/updateCourse/${course.id}`,
         payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+          },
+        },
       );
 
       setCourses((prev) =>
@@ -76,7 +74,12 @@ const EditCourse = ({ course, close, setCourses }) => {
 
       close();
     } catch (error) {
-      console.error(error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("AdminToken");
+        window.location.href = "/admin/login";
+      } else {
+        console.error("Failed to update course", error);
+      }
     }
   };
 
@@ -146,12 +149,15 @@ const EditCourse = ({ course, close, setCourses }) => {
         />
 
         <div className="flex justify-end gap-2">
-          <button onClick={close} className="px-4 py-2 border rounded">
+          <button
+            onClick={close}
+            className="px-4 py-2 border rounded cursor-pointer"
+          >
             Cancel
           </button>
           <button
             onClick={handleUpdate}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
+            className="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
           >
             Update
           </button>

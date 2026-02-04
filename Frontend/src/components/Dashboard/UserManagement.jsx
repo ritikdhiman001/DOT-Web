@@ -12,10 +12,19 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users");
+      const res = await axios.get("http://localhost:5000/api/admin/users", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+        },
+      });
       setUsers(res.data.data);
     } catch (error) {
-      console.error(error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("AdminToken");
+        window.location.href = "/admin/login";
+      } else {
+        console.error("Failed to fetch users", error);
+      }
     } finally {
       setLoading(false);
     }
@@ -24,9 +33,15 @@ const UserManagement = () => {
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure to delete this user")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/userDelete/${id}`);
-      fetchUsers();
+      await axios.delete(`http://localhost:5000/api/admin/userDelete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+        },
+      });
+      setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
+      localStorage.clear();
+      window.location.href = "/admin/login";
       console.error("Failed to delete course", error);
     }
   };
@@ -91,7 +106,7 @@ const UserManagement = () => {
         </table>
       </div>
 
-      {openEdit && (
+      {openEdit && selectedUser && (
         <EditUserModal
           user={selectedUser}
           close={() => setOpenEdit(false)}

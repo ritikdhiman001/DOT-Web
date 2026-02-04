@@ -21,24 +21,40 @@ const CourseManagement = () => {
   };
   const fetchCourses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/courses");
+      const res = await axios.get("http://localhost:5000/api/courses", {});
       setCourses(res.data.data);
     } catch (error) {
-      console.error("Faild to fetch courses", error);
+      console.error("Failed to fetch courses", error);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchCourses();
   }, []);
 
   const deleteCourse = async (id) => {
     if (!window.confirm("Are you sure to delete course")) return;
-    await axios.delete(`http://localhost:5000/api/admin/deleteCourse/${id}`);
 
-    setCourses((prev) => prev.filter((course) => course.id !== id));
+    try {
+      await axios.delete(`http://localhost:5000/api/admin/deleteCourse/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+        },
+      });
+
+      setCourses((prev) => prev.filter((course) => course.id !== id));
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("AdminToken");
+        window.location.href = "/admin/login";
+      } else {
+        alert("Failed to delete course");
+      }
+    }
   };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-center">Courses</h1>

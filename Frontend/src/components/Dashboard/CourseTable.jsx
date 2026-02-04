@@ -1,14 +1,21 @@
 import { LoaderCircle } from "lucide-react";
 
-const CourseTable = ({ courses, onDelete, onEdit }) => {
-  if (!courses || courses.length === 0) {
+const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
+  // 1️⃣ Loading state
+  if (loading) {
     return (
-      <div className="flex justify-center items-center ">
-        <LoaderCircle size={50} className="animate-spin " />
+      <div className="flex justify-center items-center py-6">
+        <LoaderCircle size={50} className="animate-spin" />
       </div>
     );
   }
 
+  // 2️⃣ Empty state
+  if (!courses || courses.length === 0) {
+    return <p className="text-center text-gray-500 py-6">No courses found</p>;
+  }
+
+  // 3️⃣ Data state
   return (
     <div className="rounded-xl shadow overflow-x-auto">
       <table className="w-full text-left">
@@ -56,14 +63,15 @@ const CourseTable = ({ courses, onDelete, onEdit }) => {
               <td className="p-3 font-semibold">
                 {course.type === "Free" ? "Free" : `$${course.price}`}
               </td>
-              <td>
+
+              <td className="p-3">
                 <button
                   className="text-red-500 cursor-pointer"
                   onClick={() => onDelete(course.id)}
                 >
                   Delete
                 </button>{" "}
-                {" / "}
+                /{" "}
                 <button
                   className="text-blue-700 cursor-pointer"
                   onClick={() => onEdit(course)}
