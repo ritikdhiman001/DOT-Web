@@ -13,32 +13,41 @@ const ComplianceServices = () => {
         "The FMCSA requires all regulated entities to update their information every two years. Let us manage your MCS-150 form to ensure your DOT number remains active.",
     },
   ];
+
   return (
-    <>
-      <div className="mt-5">
-        <h1 className="text-center text-[30px] font-bold">
+    <section className="py-12 bg-white">
+      <div className="px-6 mb-10 text-center">
+        <h1 className="text-xl font-bold text-gray-900 md:text-3xl">
           Compliance Services
         </h1>
-        <h3 className="text-center text-[20px] ">
+        <p className="mt-2 text-sm text-gray-600 md:text-lg max-w-2xl mx-auto">
           Beyond training, we offer services to keep your operations running
           smoothly.
-        </h3>
+        </p>
       </div>
-      <div className="mt-10 flex justify-center items-center gap-10 m-10 ">
-        {data.map((e, idx) => (
+
+      <div className="grid grid-cols-1 gap-6 px-6 mx-auto lg:grid-cols-2 max-w-6xl">
+        {data.map((item, idx) => (
           <div
-            className="w-110 bg-[#F0F7FF] rounded-2xl hover:scale-110 transition-transform p-10 border-2 border-transparent hover:border-black"
             key={idx}
+            className="flex flex-col justify-between p-8 bg-[#F0F7FF] rounded-3xl border-2 border-transparent hover:border-black transition-all duration-300 md:hover:scale-[1.02] shadow-sm"
           >
-            <h1 className="text-center font-bold text-[18px]">{e.title}</h1>
-            <h2 className="my-4 text-[14px]  text-center">{e.description}</h2>
-            <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-2xl cursor-pointer">
-              Comming Soon
+            <div className="text-center">
+              <h2 className="text-lg font-bold md:text-2xl mb-4">
+                {item.title}
+              </h2>
+              <p className="mb-8 text-sm leading-relaxed text-gray-700 md:text-base">
+                {item.description}
+              </p>
+            </div>
+
+            <button className="w-full bg-blue-800 text-white px-6 py-3 rounded-xl font-semibold opacity-80 cursor-not-allowed text-sm md:text-base">
+              Coming Soon
             </button>
           </div>
         ))}
       </div>
-    </>
+    </section>
   );
 };
 

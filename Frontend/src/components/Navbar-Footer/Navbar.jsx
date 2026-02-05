@@ -1,31 +1,35 @@
 import { useState } from "react";
 import { IoCart, IoMenu, IoClose } from "react-icons/io5";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="absolute top-0 left-0 w-full z-50 bg-white rounded-b-3xl ">
-      <div className="flex justify-between items-center px-4 md:px-10 h-full rounded-b-3xl">
-        <Link to="/">
+    <nav className="absolute top-0 left-0 w-full z-50 bg-white rounded-b-3xl shadow-sm">
+      <div className="flex justify-between items-center px-4 md:px-10 h-18 md:h-25">
+        <Link to="/" className="shrink-0">
           <img
             src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769667839/logo_rrppc3.webp"
             alt="logo"
-            className="w-15 md:w-32 cursor-pointer"
+            className="w-18 md:w-32 cursor-pointer"
           />
         </Link>
-        <div className="hidden md:flex gap-10 border px-6 py-3 rounded-full">
-          <Link to="/" className="hover:text-blue-900">
+
+        <div className="hidden md:flex gap-10 border border-gray-100 px-6 py-3 rounded-full font-medium">
+          <Link to="/" className="hover:text-blue-900 transition-colors">
             Home
           </Link>
-          <Link to="/courses" className="hover:text-blue-900">
+          <Link to="/courses" className="hover:text-blue-900 transition-colors">
             Courses
           </Link>
-          <Link to="/insights" className="hover:text-blue-900">
+          <Link
+            to="/insights"
+            className="hover:text-blue-900 transition-colors"
+          >
             Insight
           </Link>
-          <Link to="/contact" className="hover:text-blue-900">
+          <Link to="/contact" className="hover:text-blue-900 transition-colors">
             Contact
           </Link>
         </div>
@@ -34,53 +38,71 @@ const Navbar = () => {
           <IoCart className="text-2xl cursor-pointer text-blue-900" />
           <Link
             to="/login"
-            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700"
+            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all"
           >
             Login
           </Link>
           <Link
             to="/register"
-            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700"
+            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all"
           >
             Register
           </Link>
         </div>
 
-        <button
-          className="md:hidden text-3xl text-blue-900"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <IoClose /> : <IoMenu />}
-        </button>
+        <div className="md:hidden flex items-center gap-4">
+          <IoCart className="text-2xl text-blue-900" />
+          <button
+            className="text-3xl text-blue-900 outline-none"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <IoClose /> : <IoMenu />}
+          </button>
+        </div>
       </div>
 
-      {/* For Mobile Hidden Feilds */}
       {isOpen && (
-        <div className="md:hidden flex flex-col gap-4 px-6 pb-6 bg-white">
-          <a href="/" className="border-b pb-2">
+        <div className="md:hidden bg-white px-6 pb-8 pt-2 rounded-b-3xl shadow-xl flex flex-col gap-1 w-full left-0 animate-in fade-in slide-in-from-top-2 duration-300">
+          <Link
+            to="/"
+            className="border-b border-gray-50 py-3 text-gray-700 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
             Home
-          </a>
-          <a href="/" className="border-b pb-2">
+          </Link>
+          <Link
+            to="/courses"
+            className="border-b border-gray-50 py-3 text-gray-700 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
             Courses
-          </a>
-          <a href="/" className="border-b pb-2">
+          </Link>
+          <Link
+            to="/insights"
+            className="border-b border-gray-50 py-3 text-gray-700 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
             Insight
-          </a>
-          <a href="/" className="border-b pb-2">
+          </Link>
+          <Link
+            to="/contact"
+            className="border-b border-gray-50 py-3 text-gray-700 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
             Contact
-          </a>
+          </Link>
 
-          <div className="flex gap-3 pt-3 ">
+          <div className="grid grid-cols-2 gap-3 pt-6">
             <Link
               to="/login"
-              className="bg-blue-900 text-white px-4 py-2 rounded-full w-full"
+              className="bg-gray-100 text-blue-900 text-center px-4 py-3 rounded-2xl font-bold"
               onClick={() => setIsOpen(false)}
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="bg-blue-900 text-white px-4 py-2 rounded-full w-full cursor-pointer"
+              className="bg-blue-900 text-white text-center px-4 py-3 rounded-2xl font-bold"
               onClick={() => setIsOpen(false)}
             >
               Register

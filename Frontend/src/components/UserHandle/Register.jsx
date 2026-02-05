@@ -4,9 +4,12 @@ import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { Loader2, ArrowLeft, ShieldCheck } from "lucide-react";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
@@ -22,55 +25,22 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    setErrors((prev) => ({
-      ...prev,
-      [e.target.name]: "",
-    }));
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/register",
-        formData,
-      );
-
-      toast.success(res.data.message);
-
-      setFormData({
-        dotNumber: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        companyName: "",
-        password: "",
-      });
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    } catch (error) {
-      if (error.response?.data?.errors) {
-        setErrors(error.response.data.errors);
-      } else {
-        toast.error("Something went wrong");
-      }
+    if (errors[e.target.name]) {
+      setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
     }
   };
+
   const handleDotSearch = async () => {
     if (!formData.dotNumber) {
-      toast.error("Please enter DOT number");
+      toast.error("Please enter a DOT number first");
       return;
     }
 
+    setIsSearching(true);
     try {
       const res = await axios.get(
         "https://data.transportation.gov/resource/az4n-8mr2.json",
-        {
-          params: { dot_number: formData.dotNumber },
-        },
+        { params: { dot_number: formData.dotNumber } },
       );
 
       if (!res.data || res.data.length === 0) {
@@ -79,228 +49,241 @@ const Register = () => {
       }
 
       const dotData = res.data[0];
-
-      const companyName = dotData.legal_name || "";
-      const parts = companyName.split(" ");
-      const firstName = parts.shift() || "";
-      const lastName = parts.join(" ") || "";
+      const fullName = dotData.legal_name || "";
+      const [first, ...rest] = fullName.split(" ");
 
       setFormData((prev) => ({
         ...prev,
-        firstName,
-        lastName,
-        companyName,
+        firstName: first || "",
+        lastName: rest.join(" ") || "",
+        companyName: fullName,
         phone: dotData.phone || "",
-        email: dotData.email_address || "",
       }));
-
-      toast.success("DOT details fetched successfully");
+      toast.success("Company details retrieved!");
     } catch {
-      toast.error("Failed to fetch DOT details");
+      toast.error("System busy. Please fill details manually.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/register",
+        formData,
+      );
+      toast.success(res.data.message);
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (error) {
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        toast.error(error.response?.data?.message || "Registration failed");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <>
-      <div className="flex justify-center items-center">
-        <div className="absolute top-10 px-2 left-5 ">
-          <Link
-            to="/"
-            className="text-sm text-gray-800 hover:text-blue-600 flex items-center gap-1 "
-          >
-            ← Back to site
-          </Link>
-        </div>
-        <div className="flex rounded-2xl shadow-[0_3px_10px_rgb(0,0,0,0.2)] m-4">
-          <div className="flex flex-col px-8 py-15 justify-center items-center w-120">
-            <h2 className="text-[22px] text-center font-bold">
-              Create Your Account
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-4">
+      <div className="w-full max-w-6xl mb-4">
+        <Link
+          to="/"
+          className="group flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors w-fit font-medium"
+        >
+          <ArrowLeft
+            size={18}
+            className="group-hover:-translate-x-1 transition-transform"
+          />
+          Back to site
+        </Link>
+      </div>
+
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+        <div className="w-full md:w-1/2 p-8 lg:p-12 overflow-y-auto max-h-[90vh]">
+          <div className="mb-8">
+            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+              Create Account
             </h2>
-            <p className="text-gray-500 text-center mb-4 text-[17px]">
-              Join us to stay compliant and grow your business.
+            <p className="text-gray-500 mt-2">
+              Get started with your compliance dashboard.
             </p>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2 ">
-                <label className="text-sm mb-1">
-                  DOT Number <span className="text-lg text-red-500">*</span>
-                </label>
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    name="dotNumber"
-                    placeholder="Enter your DOT number"
-                    className="w-full px-3 py-2 border rounded-md focus:outline-none  border-gray-300"
-                    onChange={handleChange}
-                    value={formData.dotNumber}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={handleDotSearch}
-                    className="bg-blue-600 text-center px-3 py-3 text-white rounded-xl cursor-pointer"
-                  >
-                    <IoSearch />
-                  </button>
-                </div>
-                {errors.dotNumber && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.dotNumber}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="text-sm mb-1 font-medium">
-                    First Name <span className="text-lg text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="Enter a First Name"
-                    className="w-full px-3 py-2 border rounded-md border-gray-300 "
-                    onChange={handleChange}
-                    value={formData.firstName}
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.firstName}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex flex-col justify-center mt-1">
-                  <label className="text-sm mb-1 font-medium">Last Name </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Enter a Last Name"
-                    className="w-full px-3 py-2 border rounded-md border-gray-300"
-                    onChange={handleChange}
-                    value={formData.lastName}
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.lastName}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col">
-                <label className="text-sm mb-1 font-medium">
-                  Email Address <span className="text-lg text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your Email"
-                  className="w-full px-3 py-2 border rounded-md border-gray-300 "
-                  onChange={handleChange}
-                  value={formData.email}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="flex flex-col">
-                <label className="text-sm mb-1 font-medium">
-                  Phone Number <span className="text-lg text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="(555) 123-4567"
-                  className="w-full px-3 py-2 border rounded-md border-gray-300 "
-                  onChange={handleChange}
-                  value={formData.phone}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                )}
-              </div>
-
-              <div className="flex flex-col">
-                <label className="text-sm mb-1 font-medium">Company Name</label>
-                <input
-                  type="text"
-                  name="companyName"
-                  placeholder="Your Company Name (optional)"
-                  className="w-full px-3 py-2 border rounded-md border-gray-300"
-                  onChange={handleChange}
-                  value={formData.companyName}
-                />
-                {errors.companyName && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.companyName}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col">
-                <label className="text-sm mb-1 font-medium">
-                  Password <span className="text-lg text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Create a strong password"
-                    className="w-full px-3 py-2 border rounded-md border-gray-300 pr-10"
-                    autoComplete="new-password"
-                    onChange={handleChange}
-                    value={formData.password}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
-                  >
-                    {showPassword ? (
-                      <AiOutlineEyeInvisible size={20} />
-                    ) : (
-                      <AiOutlineEye size={20} />
-                    )}
-                  </button>
-                  {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.password}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full mt-4 flex cursor-pointer items-center justify-center gap-2 bg-blue-700 text-white py-2 rounded-md hover:bg-blue-600 transition "
-              >
-                Create Account
-              </button>
-              <h2 className="text-center">
-                Already have an Account ?
-                <Link to="/login" className="text-blue-600">
-                  Sign in here
-                </Link>
-              </h2>
-              <p className="text-center text-sm text-gray-400">
-                By Creating an account, you agree to our terms of service and
-                privacy policy.
-              </p>
-            </form>
           </div>
 
-          <div className="w-115">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <label className="text-sm font-semibold text-gray-700">
+              Enter DOT Number *
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="dotNumber"
+                className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                onChange={handleChange}
+                value={formData.dotNumber}
+              />
+              <button
+                type="button"
+                onClick={handleDotSearch}
+                disabled={isSearching}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded-xl transition-all flex items-center justify-center disabled:opacity-50"
+              >
+                {isSearching ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <IoSearch size={20} />
+                )}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-semibold text-gray-700">
+                  First Name *
+                </label>
+                <input
+                  name="firstName"
+                  className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                  onChange={handleChange}
+                  value={formData.firstName}
+                  required
+                />
+                {errors.firstName && (
+                  <span className="text-red-500 text-[10px] font-bold uppercase">
+                    {errors.firstName}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-semibold text-gray-700">
+                  Last Name
+                </label>
+                <input
+                  name="lastName"
+                  className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                  onChange={handleChange}
+                  value={formData.lastName}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-gray-700">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                name="email"
+                className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                onChange={handleChange}
+                value={formData.email}
+                required
+              />
+              {errors.email && (
+                <span className="text-red-500 text-[10px] font-bold uppercase">
+                  {errors.email}
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-gray-700">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                onChange={handleChange}
+                value={formData.phone}
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-gray-700">
+                Company Name
+              </label>
+              <input
+                name="companyName"
+                className="w-full px-4 py-2.5 border rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                onChange={handleChange}
+                value={formData.companyName}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-gray-700">
+                Password *
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  className="w-full px-4 py-2.5 border rounded-xl border-gray-300 pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
+                  autoComplete="new-password"
+                  onChange={handleChange}
+                  value={formData.password}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600"
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible size={20} />
+                  ) : (
+                    <AiOutlineEye size={20} />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <span className="text-red-500 text-[10px] font-bold uppercase">
+                  {errors.password}
+                </span>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-[0.98] disabled:bg-blue-400 flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                "Create Account"
+              )}
+            </button>
+
+            <p className="text-center text-sm text-gray-500">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-600 font-bold hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        <div className="hidden md:flex md:w-1/2 relative overflow-hidden flex-col justify-end p-12 text-white">
+          <div className="absolute top-0 left-0 w-full h-full">
             <img
               src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769593875/Login1_ave8la.png"
-              alt="img"
-              className="h-full w-full object-cover rounded-r-2xl"
+              className="w-full h-full object-cover"
+              alt="Background"
             />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

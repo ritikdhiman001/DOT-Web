@@ -1,9 +1,10 @@
 import axios from "axios";
-import { X } from "lucide-react";
+import { X, Loader2, BookOpen } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const AddBlogsModel = ({ close, refresh }) => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     tag: "",
@@ -12,8 +13,13 @@ const AddBlogsModel = ({ close, refresh }) => {
     author: "",
   });
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       await axios.post("http://localhost:5000/api/admin/addblog", formData, {
@@ -23,91 +29,122 @@ const AddBlogsModel = ({ close, refresh }) => {
       });
 
       toast.success("Blog added successfully");
-      close();
       refresh();
+      close();
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
         localStorage.removeItem("AdminToken");
         window.location.href = "/admin/login";
       } else {
-        toast.error("Something went wrong");
+        toast.error(error.response?.data?.message || "Something went wrong");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-md rounded-xl p-6 relative">
-        <button
-          className="absolute top-4 right-4 cursor-pointer"
-          onClick={close}
-        >
-          <X />
-        </button>
-        <h1 className="text-xl font-semibold mb-4">Add Blog</h1>
-        <form className="space-y-3" onSubmit={handleSubmit}>
-          <label>Tag Name</label>
-          <input
-            type="text"
-            name="tag"
-            className="w-full border p-2 rounded"
-            placeholder="eg. Compalince"
-            onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-          />
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-150 p-4">
+      <div className="absolute inset-0" onClick={close}></div>
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="flex justify-between items-center p-5 border-b bg-gray-50/50">
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-100 p-2 rounded-lg">
+              <BookOpen className="text-blue-600" size={20} />
+            </div>
+            <h1 className="text-xl font-bold text-gray-800">Create New Blog</h1>
+          </div>
+          <button
+            className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+            onClick={close}
+          >
+            <X size={24} />
+          </button>
+        </div>
 
-          <label>Duration</label>
-          <input
-            type="text"
-            className="w-full border p-2 rounded"
-            placeholder="7 min read"
-            onChange={(e) =>
-              setFormData({ ...formData, duration: e.target.value })
-            }
-          />
+        <form className="p-6" onSubmit={handleSubmit}>
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
+                Blog Title
+              </label>
+              <input
+                required
+                type="text"
+                name="title"
+                className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Tag
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="tag"
+                  className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Duration
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="duration"
+                  className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-          <label>Title</label>
-          <input
-            type="text"
-            name="title"
-            className="w-full border p-2 rounded"
-            placeholder="John"
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                title: e.target.value,
-              })
-            }
-          />
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
+                Author Name
+              </label>
+              <input
+                required
+                type="text"
+                name="author"
+                className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                onChange={handleChange}
+              />
+            </div>
 
-          <label>Author</label>
-          <input
-            type="text"
-            name="author"
-            className="w-full border p-2 rounded"
-            placeholder="Compliance..."
-            onChange={(e) =>
-              setFormData({ ...formData, author: e.target.value })
-            }
-          />
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
+                Description / Content
+              </label>
+              <textarea
+                required
+                name="description"
+                rows="4"
+                className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
+                placeholder="Write your blog content here..."
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-          <label>Description</label>
-          <textarea
-            name="description"
-            className="w-full border p-2 rounded"
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-          />
-
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6 pt-4 border-t">
             <button
+              type="button"
               onClick={close}
-              className="px-4 py-2 border rounded cursor-pointer"
+              className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
-            <button className="bg-blue-700 hover:scale-95 text-white px-4 py-2 rounded cursor-pointer">
-              Save
+            <button
+              disabled={loading}
+              className="w-full sm:w-auto bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-100 disabled:bg-blue-400 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {loading && <Loader2 size={18} className="animate-spin" />}
+              Publish Blog
             </button>
           </div>
         </form>

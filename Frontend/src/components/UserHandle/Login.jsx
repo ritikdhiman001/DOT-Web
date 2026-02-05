@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { Loader2, ArrowLeft } from "lucide-react";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -16,26 +18,22 @@ const Login = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    setErrors((prev) => ({
-      ...prev,
-      [e.target.name]: "",
-    }));
+    if (errors[e.target.name]) {
+      setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await axios.post("http://localhost:5000/api/login", formData);
 
       localStorage.setItem("token", res.data.token);
-      toast.success(res.data.message);
+      toast.success(res.data.message || "Login Successful");
 
-      setFormData({
-        email: "",
-        password: "",
-      });
+      setFormData({ email: "", password: "" });
       setTimeout(() => {
         navigate("/");
       }, 1000);
@@ -45,110 +43,123 @@ const Login = () => {
       } else if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Something went wrong");
+        toast.error("Invalid credentials or server error");
       }
+    } finally {
+      setLoading(false);
     }
   };
-  return (
-    <>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-          <div className="hidden md:block">
-            <img
-              src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769593875/Login1_ave8la.png"
-              alt="driver Img"
-              className=" h-full w-full object-cover"
-            />
-          </div>
-          <div className="p-8 md:p-12">
-            <Link
-              to="/"
-              className="text-sm text-gray-600 hover:text-blue-600 flex items-center gap-1 mb-6"
-            >
-              ← Back to site
-            </Link>
-            <h1 className="text-2xl text-gray-900 font-bold text-center">
-              Welcome Back
-            </h1>
-            <p className="text-gray-500 mt-1 mb-8 text-center">
-              Sign in to access your dashboard.
-            </p>
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address <span className="text-lg text-red-500">*</span>
-                </label>
-                <input
-                  name="email"
-                  onChange={handleChange}
-                  type="email"
-                  value={formData.email}
-                  placeholder="Enter your email"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email}</p>
-                )}
-              </div>
 
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="text-sm font-medium text-gray-700">
-                    Password <span className="text-lg text-red-500">*</span>
-                  </label>
-                  <a
-                    href="/forget-password"
-                    className="font-sm text-blue-600 hover:underline"
-                  >
-                    Forgot Password ?
-                  </a>
-                </div>
-                <div className="relative">
-                  <input
-                    name="password"
-                    onChange={handleChange}
-                    value={formData.password}
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 pr-10"
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
-                  >
-                    {showPassword ? (
-                      <AiOutlineEyeInvisible size={20} />
-                    ) : (
-                      <AiOutlineEye size={20} />
-                    )}
-                  </button>
-                  {errors.password && (
-                    <p className="text-red-500 text-xs">{errors.password}</p>
-                  )}
-                </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="max-w-5xl w-full bg-white rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+        <div className="hidden md:block relative">
+          <img
+            src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769593875/Login1_ave8la.png"
+            alt="Login Illustration"
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="p-8 md:p-16 flex flex-col justify-center">
+          <Link
+            to="/"
+            className="text-sm font-medium text-gray-500 hover:text-blue-600 flex items-center gap-2 mb-8 transition-colors group"
+          >
+            <ArrowLeft
+              size={16}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+            Back to site
+          </Link>
+
+          <h1 className="text-3xl text-gray-900 font-bold mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-500 mb-8">
+            Please enter your details to sign in.
+          </p>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Email Address
+              </label>
+              <input
+                name="email"
+                onChange={handleChange}
+                type="email"
+                value={formData.email}
+                required
+                className={`w-full rounded-xl border ${errors.email ? "border-red-500" : "border-gray-300"} px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="text-sm font-semibold text-gray-700">
+                  Password
+                </label>
+                <Link
+                  to="/forget-password"
+                  size="sm"
+                  className="text-xs font-bold text-blue-600 hover:text-blue-700"
+                >
+                  Forgot Password?
+                </Link>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 scale-95 cursor-pointer"
-              >
-                Sign In
-              </button>
-            </form>
-            <p className="text-center text-sm text-gray-600 mt-6">
-              Don&apos;t have an account?
-              <Link to="/register" className="text-blue-600 hover:underline">
-                SignUp
-              </Link>
-            </p>
-            <p className="flex items-center justify-center gap-1 text-xs  text-gray-400 mt-4">
-              🔒 Sessions expire automatically for security
-            </p>
-          </div>
+              <div className="relative">
+                <input
+                  name="password"
+                  onChange={handleChange}
+                  value={formData.password}
+                  required
+                  type={showPassword ? "text" : "password"}
+                  className={`w-full rounded-xl border ${errors.password ? "border-red-500" : "border-gray-300"} px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible size={22} />
+                  ) : (
+                    <AiOutlineEye size={22} />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 active:scale-[0.98] transition-all cursor-pointer shadow-lg shadow-blue-200 flex justify-center items-center gap-2"
+            >
+              {loading && <Loader2 size={20} className="animate-spin" />}
+              {loading ? "Signing In..." : "Sign In"}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-gray-600 mt-8">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-blue-600 font-bold hover:underline"
+            >
+              Sign Up
+            </Link>
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

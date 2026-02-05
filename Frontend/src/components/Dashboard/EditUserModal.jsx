@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { X, Save, User } from "lucide-react";
+import { toast } from "react-toastify";
 
 const EditUserModal = ({ user, close, refresh }) => {
   const [formData, setFormData] = useState({
@@ -8,14 +10,15 @@ const EditUserModal = ({ user, close, refresh }) => {
     phone: "",
     companyName: "",
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     if (user) {
       setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        companyName: user.companyName,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        phone: user.phone || "",
+        companyName: user.companyName || "",
       });
     }
   }, [user]);
@@ -25,6 +28,7 @@ const EditUserModal = ({ user, close, refresh }) => {
   };
 
   const handleUpdate = async () => {
+    setIsUpdating(true);
     try {
       await axios.put(
         `http://localhost:5000/api/admin/updateUser/${user.id}`,
@@ -35,6 +39,7 @@ const EditUserModal = ({ user, close, refresh }) => {
           },
         },
       );
+      toast.success("User updated successfully!");
       refresh();
       close();
     } catch (error) {
@@ -42,61 +47,115 @@ const EditUserModal = ({ user, close, refresh }) => {
         localStorage.removeItem("AdminToken");
         window.location.href = "/admin/login";
       } else {
-        console.error("Failed to update user", error);
+        toast.error("Failed to update user");
       }
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 bg-opacity-40 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-100">
-        <h3 className="text-xl font-bold mb-4 text-center">Edit User</h3>
-        <label className="">First Name</label>
-        <input
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          placeholder="First Name"
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <label className="">Last Name</label>
-        <input
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          placeholder="Last Name"
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <label className="">Phone Number</label>
-        <input
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="Phone"
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <label className="">Company Name</label>
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6">
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-100"
+        onClick={close}
+      ></div>
 
-        <input
-          name="companyName"
-          value={formData.companyName}
-          onChange={handleChange}
-          placeholder="Company"
-          className="w-full mb-3 p-2 border rounded"
-        />
-
-        <div className="flex justify-end gap-2">
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="flex justify-between items-center p-6 border-b">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+              <User size={20} />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">Edit Profile</h3>
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                DOT ID: {user.dotNumber}
+              </p>
+            </div>
+          </div>
           <button
             onClick={close}
-            className="px-4 py-2 border rounded cursor-pointer"
+            className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-all"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-[70vh]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-bold text-gray-700 ml-1">
+                First Name
+              </label>
+              <input
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="First Name"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all text-gray-800"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-bold text-gray-700 ml-1">
+                Last Name
+              </label>
+              <input
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all text-gray-800"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <label className="text-sm font-bold text-gray-700 ml-1">
+                Phone Number
+              </label>
+              <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+1 (555) 000-0000"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all text-gray-800"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <label className="text-sm font-bold text-gray-700 ml-1">
+                Company Name
+              </label>
+              <input
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                placeholder="Logistics Company Name"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all text-gray-800"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 border-t bg-gray-50/50 flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={close}
+            className="flex-1 order-2 sm:order-1 px-5 py-3 text-gray-600 font-bold hover:bg-gray-200 rounded-xl transition-all active:scale-95"
           >
             Cancel
           </button>
           <button
             onClick={handleUpdate}
-            className="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
+            disabled={isUpdating}
+            className="flex-1 order-1 sm:order-2 px-5 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70"
           >
-            Update
+            {isUpdating ? (
+              "Updating..."
+            ) : (
+              <>
+                <Save size={18} /> Save Changes
+              </>
+            )}
           </button>
         </div>
       </div>

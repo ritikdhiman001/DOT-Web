@@ -3,6 +3,9 @@ import prisma from "../../../PrismaClient.js";
 export const getAllUsers = async (req, res) => {
   try {
     const user = await prisma.user.findMany({
+      where: {
+        role: "USER",
+      },
       select: {
         id: true,
         dotNumber: true,

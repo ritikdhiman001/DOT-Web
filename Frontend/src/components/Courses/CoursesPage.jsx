@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { Search, Filter } from "lucide-react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Search, LoaderCircle } from "lucide-react";
 import ContactTeam from "../Contact/ContactTeam";
 import Footer from "../Navbar-Footer/Footer";
-import axios from "axios";
-import { useEffect } from "react";
-import { LoaderCircle } from "lucide-react";
+
 const CoursesPage = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
@@ -17,12 +16,11 @@ const CoursesPage = () => {
         const res = await axios.get("http://localhost:5000/api/courses");
         setCourses(res.data.data);
       } catch (error) {
-        console.error("Faild to load courses", error);
+        console.error("Failed to load courses", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchCourses();
   }, []);
 
@@ -30,54 +28,47 @@ const CoursesPage = () => {
     const matchesSearch = course.title
       .toLowerCase()
       .includes(search.toLowerCase());
-
     const matchesFilter = filter === "All" ? true : course.type === filter;
-
     return matchesFilter && matchesSearch;
   });
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="relative h-screen">
+      <section className="relative min-h-[60vh] md:h-screen">
         <img
           src="https://res.cloudinary.com/dpqggtyjw/image/upload/v1769586421/CoursesHeroBG_laijac.png"
           alt="img"
           className="absolute inset-0 w-full h-full object-cover"
         />
-
         <div className="absolute inset-0 bg-black/60" />
 
-        <div className="relative z-10 h-full flex items-center justify-center">
-          <div className="pt-30">
-            <h1 className="text-6xl font-bold text-white">
-              <span className="text-blue-800 text-6xl">DOT Training</span>
-              Courses
+        <div className="relative z-10 h-full flex items-center justify-center py-20">
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <h1 className="text-3xl md:text-6xl font-bold text-white mt-10">
+              <span className="text-blue-700">DOT Training</span> Courses
             </h1>
-            <p className="mt-4 max-w-3xl text-white leading-6 text-[20px]">
+            <p className="mt-4 max-w-2xl text-white text-sm md:text-xl leading-relaxed">
               Comprehensive training programs designed to keep your business
               compliant and your team confident in DOT regulations.
             </p>
-
-            <div className="mt-32 flex items-center w-full max-w-3xl bg-white rounded-full shadow-lg overflow-hidden">
-              <div className="flex items-center px-4 text-gray-400">
+            <div className="mt-10 flex flex-row items-center w-full max-w-md md:max-w-2xl bg-white rounded-full shadow-lg overflow-hidden">
+              <div className="pl-4 text-gray-400">
                 <Search className="w-5 h-5" />
               </div>
 
               <input
                 type="text"
-                placeholder="Search Courses..."
+                placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 px-4 py-3 outline-none"
+                className="w-full px-3 py-3 md:px-4 md:py-4 outline-none text-sm md:text-base"
               />
 
-              <div className="flex items-center gap-2 px-5 py-3 border-l">
-                <Filter className="w-4 h-4 text-gray-600" />
+              <div className="border-l border-gray-200 px-2 md:px-4">
                 <select
-                  name="courses"
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
-                  className="outline-none"
+                  className="outline-none bg-transparent text-sm md:text-base font-medium cursor-pointer"
                 >
                   <option value="All">All</option>
                   <option value="Free">Free</option>
@@ -89,42 +80,53 @@ const CoursesPage = () => {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="text-2xl font-bold mb-6 text-center">Popular Courses</h2>
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+          Popular Courses
+        </h2>
 
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <LoaderCircle size={50} className="animate-spin" />
+          <div className="flex justify-center py-20">
+            <LoaderCircle size={50} className="animate-spin text-blue-600" />
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCourses.map((course) => (
               <div
                 key={course.id}
-                className="rounded-2xl border-2 border-gray-400 hover:border-gray-600 hover:scale-110 transition-all"
+                className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md md:hover:scale-[1.03] transition-all duration-300 overflow-hidden flex flex-col"
               >
-                <img
-                  src={course.image}
-                  alt={course.title}
-                  className="h-50 w-full object-cover rounded-t-2xl"
-                  onError={(e) =>
-                    (e.target.src = "https://via.placeholder.com/400x200")
-                  }
-                />
+                <div className="relative h-48 md:h-56 w-full">
+                  <img
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) =>
+                      (e.target.src = "https://via.placeholder.com/400x200")
+                    }
+                  />
+                </div>
 
-                <div className="p-5">
-                  <h3 className="font-semibold text-lg">{course.title}</h3>
+                <div className="p-4 md:p-6 flex flex-col grow">
+                  <h3 className="font-bold text-base md:text-xl text-gray-800 line-clamp-2">
+                    {course.title}
+                  </h3>
 
-                  <p className="text-sm text-gray-500 mt-2 h-25">
+                  <p className="text-gray-500 mt-2 text-xs md:text-sm line-clamp-3 grow">
                     {course.description}
                   </p>
 
-                  <div className="flex flex-col mt-4">
-                    <h2 className="text-2xl font-bold">
-                      {course.type === "Free" ? "Free" : `$${course.price}`}
-                    </h2>
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Price
+                      </span>
+                      <h2 className="text-lg md:text-2xl font-black">
+                        {course.type === "Free" ? "Free" : `$${course.price}`}
+                      </h2>
+                    </div>
 
-                    <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer">
+                    <button className="w-full bg-blue-800 text-white py-2.5 rounded-xl active:scale-95 transition-all font-bold text-sm md:text-base cursor-pointer shadow-lg ">
                       Add to Cart
                     </button>
                   </div>
@@ -134,6 +136,7 @@ const CoursesPage = () => {
           </div>
         )}
       </section>
+
       <ContactTeam />
       <Footer />
     </div>
