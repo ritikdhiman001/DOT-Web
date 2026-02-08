@@ -10,6 +10,7 @@ import {
   PlusCircle,
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
+import { apiBaseUrl } from "@/utils/common";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/admin/dashboard-stats",
+          `${apiBaseUrl}/api/admin/dashboard-stats`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,

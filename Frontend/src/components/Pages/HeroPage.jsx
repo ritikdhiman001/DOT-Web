@@ -83,9 +83,7 @@ const HeroPage = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 bg-[#f0f6fc] py-6 md:py-10 px-4 md:px-6 rounded-3xl md:rounded-[40px] shadow-lg">
           {state.map((stat, id) => (
             <div key={id} className="text-center">
-              <h3 className="font-bold text-lg md:text-3xl">
-                {stat.value}
-              </h3>
+              <h3 className="font-bold text-lg md:text-3xl">{stat.value}</h3>
               <p className="text-gray-600 text-[10px] md:text-base">
                 {stat.label}
               </p>
@@ -101,7 +99,6 @@ const HeroPage = () => {
         <CompliancePage />
         <ContectTeam />
       </div>
-      <Footer />
     </>
   );
 };

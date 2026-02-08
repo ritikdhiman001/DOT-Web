@@ -4,8 +4,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Loader2, ArrowLeft } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { apiBaseUrl } from "@/utils/common";
 
 const Login = () => {
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -28,9 +31,9 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/login", formData);
+      const res = await axios.post(`${apiBaseUrl}/api/login`, formData);
 
-      localStorage.setItem("token", res.data.token);
+      login(res.data.token);
       toast.success(res.data.message || "Login Successful");
 
       setFormData({ email: "", password: "" });

@@ -14,6 +14,7 @@ import BlogPage from "./Dashboard/BlogPage";
 import Navbar from "./Navbar-Footer/Navbar";
 import Footer from "./Navbar-Footer/Footer";
 import CoursesPage from "./Courses/CoursesPage";
+import CartPage from "./Courses/CartPage";
 
 const UserLayout = () => (
   <>
@@ -33,6 +34,7 @@ const Navigation = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/insights" element={<InsightsHome />} />
       </Route>
+      <Route path="/cart" element={<CartPage />} />
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

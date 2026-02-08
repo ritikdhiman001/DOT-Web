@@ -5,6 +5,7 @@ import AddCourseModel from "./AddCourseModel";
 import EditCourse from "./EditCourse";
 import { Plus, BookOpen, RefreshCcw } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiBaseUrl } from "@/utils/common";
 
 const CourseManagement = () => {
   const [open, setOpen] = useState(false);
@@ -15,7 +16,7 @@ const CourseManagement = () => {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/courses");
+      const res = await axios.get(`${apiBaseUrl}/api/courses`);
       setCourses(res.data.data);
     } catch (error) {
       console.error("Failed to fetch courses", error);
@@ -41,7 +42,7 @@ const CourseManagement = () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/admin/deleteCourse/${id}`, {
+      await axios.delete(`${apiBaseUrl}/api/admin/deleteCourse/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },

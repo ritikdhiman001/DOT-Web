@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { Upload, X, ImageIcon } from "lucide-react";
+import { apiBaseUrl } from "@/utils/common";
 
 const EditCourse = ({ course, close, setCourses }) => {
   const fileRef = useRef(null);
@@ -61,7 +62,7 @@ const EditCourse = ({ course, close, setCourses }) => {
       };
 
       const res = await axios.put(
-        `http://localhost:5000/api/admin/updateCourse/${course.id}`,
+        `${apiBaseUrl}/api/admin/updateCourse/${course.id}`,
         payload,
         {
           headers: {

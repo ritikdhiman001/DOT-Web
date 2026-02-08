@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import { X, Upload, ImageIcon, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiBaseUrl } from "@/utils/common";
 
 const AddCourseModal = ({ close, refresh }) => {
   const fileRef = useRef(null);
@@ -51,7 +52,7 @@ const AddCourseModal = ({ close, refresh }) => {
     setSubmitting(true);
     try {
       await axios.post(
-        "http://localhost:5000/api/admin/courses",
+        `${apiBaseUrl}/api/admin/courses`,
         {
           ...form,
           image: imageUrl,

@@ -11,6 +11,7 @@ import {
   User,
 } from "lucide-react";
 import EditBlog from "./EditBlog";
+import { apiBaseUrl } from "@/utils/common";
 
 const BlogPage = () => {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,7 @@ const BlogPage = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/getblog", {
+      const res = await axios.get(`${apiBaseUrl}/api/admin/getblog`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },
@@ -44,7 +45,7 @@ const BlogPage = () => {
   const deleteBlog = async (id) => {
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/deleteBlog/${id}`, {
+      await axios.delete(`${apiBaseUrl}/api/admin/deleteBlog/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },

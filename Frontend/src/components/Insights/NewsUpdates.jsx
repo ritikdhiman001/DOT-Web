@@ -3,6 +3,7 @@ import Footer from "../Navbar-Footer/Footer";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { apiBaseUrl } from "@/utils/common";
 
 const NewsUpdates = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +14,7 @@ const NewsUpdates = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/getblog");
+      const res = await axios.get(`${apiBaseUrl}/api/admin/getblog`);
       setBlogs(res.data.data);
     } catch {
       toast.error("Unable to fetch blogs");
@@ -80,7 +81,6 @@ const NewsUpdates = () => {
           ))}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

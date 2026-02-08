@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/utils/common";
 import axios from "axios";
 import { X, Save, Loader2 } from "lucide-react";
 import React, { useState } from "react";
@@ -21,7 +22,7 @@ const EditBlog = ({ close, setBlogs, blogs }) => {
     setLoading(true);
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/admin/updateBlog/${blogs.id}`,
+        `${apiBaseUrl}/api/admin/updateBlog/${blogs.id}`,
         data,
         {
           headers: {

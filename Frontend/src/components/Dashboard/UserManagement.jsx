@@ -2,6 +2,7 @@ import axios from "axios";
 import { LoaderCircle, Trash2, Edit3 } from "lucide-react";
 import { useEffect, useState } from "react";
 import EditUserModal from "./EditUserModal";
+import { apiBaseUrl } from "@/utils/common";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users", {
+      const res = await axios.get(`${apiBaseUrl}/api/admin/users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },
@@ -32,7 +33,7 @@ const UserManagement = () => {
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/userDelete/${id}`, {
+      await axios.delete(`${apiBaseUrl}/api/admin/userDelete/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },

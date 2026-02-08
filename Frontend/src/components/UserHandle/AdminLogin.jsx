@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
+import { apiBaseUrl } from "@/utils/common";
 
 export function AdminLogin() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export function AdminLogin() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/admin/login",
+        `${apiBaseUrl}/api/admin/login`,
         formData,
       );
       localStorage.setItem("AdminToken", res.data.token);

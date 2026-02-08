@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { X, Save, User } from "lucide-react";
 import { toast } from "react-toastify";
+import { apiBaseUrl } from "@/utils/common";
 
 const EditUserModal = ({ user, close, refresh }) => {
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ const EditUserModal = ({ user, close, refresh }) => {
     setIsUpdating(true);
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/updateUser/${user.id}`,
+        `${apiBaseUrl}/api/admin/updateUser/${user.id}`,
         formData,
         {
           headers: {

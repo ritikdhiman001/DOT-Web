@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { LoaderCircle } from "lucide-react";
+import { apiBaseUrl } from "@/utils/common";
 
 const MandatoryCourse = () => {
   const [courses, setCourses] = useState([]);
@@ -9,7 +10,7 @@ const MandatoryCourse = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/courses");
+        const res = await axios.get(`${apiBaseUrl}/api/courses`);
         setCourses(res.data.data);
       } catch (error) {
         console.error("Failed to load courses", error);

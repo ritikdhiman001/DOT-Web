@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ContactDetails = () => {
+  const baseUrl = import.meta.env.VITE_API_URL;
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -25,13 +26,9 @@ const ContactDetails = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/contact",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const res = await axios.post(`${baseUrl}/api/contact`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success(res.data.message);
       setFormData({
         fullName: "",
@@ -228,7 +225,6 @@ const ContactDetails = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

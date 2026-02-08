@@ -1,10 +1,15 @@
+import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { IoCart, IoMenu, IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { IoPersonCircle } from "react-icons/io5";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { cart } = useCart();
+  const { isAuthorization, logout } = useAuth();
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   return (
     <nav className="absolute top-0 left-0 w-full z-50 bg-white rounded-b-3xl shadow-sm">
       <div className="flex justify-between items-center px-4 md:px-10 h-18 md:h-25">
@@ -35,23 +40,54 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <IoCart className="text-2xl cursor-pointer text-blue-900" />
-          <Link
-            to="/login"
-            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all"
-          >
-            Login
+          <Link to="/cart" className="relative p-2">
+            <IoCart className="text-2xl cursor-pointer text-blue-900" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-2 py-1">
+                {cartCount}
+              </span>
+            )}
           </Link>
-          <Link
-            to="/register"
-            className="bg-blue-900 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all"
-          >
-            Register
-          </Link>
+          {isAuthorization ? (
+            <div className="relative group">
+              <IoPersonCircle className="text-3xl text-blue-900 cursor-pointer" />
+
+              <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-xl opacity-0 group-hover:opacity-100 transition">
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="bg-blue-900 text-white px-5 py-2 rounded-full"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-blue-900 text-white px-5 py-2 rounded-full"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
 
         <div className="md:hidden flex items-center gap-4">
-          <IoCart className="text-2xl text-blue-900" />
+          <Link to="/cart" className="relative p-2">
+            <IoCart className="text-2xl cursor-pointer text-blue-900" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full px-2 py-1">
+                {cartCount}
+              </span>
+            )}
+          </Link>
           <button
             className="text-3xl text-blue-900 outline-none"
             onClick={() => setIsOpen(!isOpen)}
@@ -93,20 +129,22 @@ const Navbar = () => {
           </Link>
 
           <div className="grid grid-cols-2 gap-3 pt-6">
-            <Link
-              to="/login"
-              className="bg-gray-100 text-blue-900 text-center px-4 py-3 rounded-2xl font-bold"
-              onClick={() => setIsOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="bg-blue-900 text-white text-center px-4 py-3 rounded-2xl font-bold"
-              onClick={() => setIsOpen(false)}
-            >
-              Register
-            </Link>
+            {isAuthorization ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="bg-red-100 text-red-600 px-4 py-3 rounded-2xl font-bold"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+              </>
+            )}
           </div>
         </div>
       )}

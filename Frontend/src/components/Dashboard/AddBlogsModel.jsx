@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/utils/common";
 import axios from "axios";
 import { X, Loader2, BookOpen } from "lucide-react";
 import React, { useState } from "react";
@@ -22,7 +23,7 @@ const AddBlogsModel = ({ close, refresh }) => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/admin/addblog", formData, {
+      await axios.post(`${apiBaseUrl}/api/admin/addblog`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
         },
