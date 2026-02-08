@@ -38,11 +38,12 @@ const DetailPage = () => {
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        {cardData.map((item) => (
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+        {cardData.map((item,index) => (
           <div
             key={item.id}
-            className="flex flex-col items-center text-center p-8 bg-white rounded-3xl border hover:border-gray-800 shadow-sm hover:shadow-md md:hover:scale-105 transition-all duration-300 "
+                  style={{ animationDelay: `${index * 0.2}s` }}
+            className="flex fade-up flex-col items-center text-center p-8 bg-white rounded-3xl border hover:border-gray-800 shadow-sm hover:shadow-md md:hover:scale-105 transition-all duration-300 "
           >
             <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
               {item.icon}

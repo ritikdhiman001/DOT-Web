@@ -72,7 +72,7 @@ const EditCourse = ({ course, close, setCourses }) => {
       );
 
       setCourses((prev) =>
-        prev.map((c) => (c.id === course.id ? res.data.data : c)),
+        prev?.map((c) => (c.id === course.id ? res.data.data : c)),
       );
       close();
     } catch (error) {

@@ -1,6 +1,6 @@
+import { cn } from "@/utils/common";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 
 function Card({ className, ...props }) {
   return (

@@ -56,7 +56,7 @@ const HeroPage = () => {
           </Slider>
         </div>
 
-        <div className="relative flex items-center h-full px-6 md:px-20 lg:px-40 text-white">
+        <div className="relative flex items-center h-full px-6 md:px-20 lg:px-40 text-white fadeInUp-animation">
           <div className="max-w-4xl pt-10 md:pt-0">
             <h1 className="text-xl md:text-4xl mb-2">Everything You Need to</h1>
             <h2 className="text-3xl md:text-6xl font-bold mb-4">
@@ -79,7 +79,7 @@ const HeroPage = () => {
         </div>
       </section>
 
-      <div className="max-w-[95%] md:max-w-[90%] -mt-10 md:-mt-20 mx-auto relative z-20">
+      <div className="max-w-[95%] md:max-w-[90%] -mt-10 md:-mt-20 mx-auto relative z-20 fadeInUp-animation">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 bg-[#f0f6fc] py-6 md:py-10 px-4 md:px-6 rounded-3xl md:rounded-[40px] shadow-lg">
           {state.map((stat, id) => (
             <div key={id} className="text-center">
@@ -94,7 +94,7 @@ const HeroPage = () => {
 
       <div className="mt-10">
         <Company />
-        <MandatoryCourse />
+        <MandatoryCourse title='Mandatory Trainings' description='Get certified in essential DOT compliance areas' />
         <ComplianceServices />
         <CompliancePage />
         <ContectTeam />

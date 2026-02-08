@@ -115,6 +115,7 @@ const CourseManagement = () => {
           course={selectedCourse}
           close={closeModal}
           refresh={fetchCourses}
+          setCourses={setCourses}
         />
       )}
     </div>

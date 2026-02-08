@@ -13,7 +13,7 @@ const InsightsHome = () => {
         />
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="relative z-10 px-[6%] pt-24 pb-16 md:pt-0">
+        <div className="relative z-10 px-[6%] pt-24 pb-16 md:pt-0 fadeInUp-animation">
           <h1 className="text-3xl md:text-[3.5rem] font-bold mb-4 leading-tight">
             <span className="text-blue-500 md:text-blue-800">FMCSA</span>{" "}
             <span className="text-white">Updates</span>

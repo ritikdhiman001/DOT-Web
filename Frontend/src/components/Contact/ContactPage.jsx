@@ -13,7 +13,7 @@ const ContactPage = () => {
 
         <div className="absolute inset-0 bg-black/40" />
 
-        <div className="relative z-20 px-[6%] pt-20 md:pt-0 ">
+        <div className="relative z-20 px-[6%] pt-20 md:pt-0  fadeInUp-animation">
           <h1 className="text-[45px] md:text-6xl md:mb-7 mb-4 text-blue-600 md:text-blue-800 font-bold leading-tight">
             Contact <span className="text-white">Us</span>
           </h1>
