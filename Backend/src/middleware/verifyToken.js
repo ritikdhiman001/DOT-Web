@@ -32,7 +32,7 @@ export const adminTokenVerify = (req, res, next) => {
     if (decoded.role !== "ADMIN") {
       return res.status(403).json({ message: "Admin Access Only" });
     }
-    res.admin = decoded;
+    req.admin = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid Token" });

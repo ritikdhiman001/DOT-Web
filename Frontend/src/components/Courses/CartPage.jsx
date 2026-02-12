@@ -1,16 +1,49 @@
 import { useCart } from "@/context/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoTrashOutline, IoAdd, IoRemove, IoArrowBack } from "react-icons/io5";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const CartPage = () => {
-  const { cart, addToCart, removeFromCart, decrementQuantity } = useCart();
+  const { cart, addToCart, removeFromCart, decrementQuantity, clearCart } =
+    useCart();
+  const navigate = useNavigate();
+
+  const handleCheckout = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        toast.error("Please login first");
+        navigate("/login");
+        return;
+      }
+
+      for (const item of cart) {
+        await axios.post(
+          `http://localhost:5000/api/order/buy`,
+          { courseId: item.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+      }
+
+      toast.success("Courses purchased successfully 🎉");
+      clearCart();
+      navigate("/purchasescourse");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Checkout failed");
+    }
+  };
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const shipping = 10;
-  const total = subtotal + shipping;
+  const total = subtotal;
 
   if (cart.length === 0) {
     return (
@@ -125,10 +158,6 @@ const CartPage = () => {
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600 font-medium">
-                  <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
-                </div>
                 <div className="h-px bg-gray-100 my-4" />
                 <div className="flex justify-between items-center">
                   <span className="text-base md:text-lg font-bold text-gray-800">
@@ -140,7 +169,10 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-800 hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-blue-900/20">
+              <button
+                onClick={handleCheckout}
+                className="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-800 hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-blue-900/20"
+              >
                 Proceed to Checkout
               </button>
 

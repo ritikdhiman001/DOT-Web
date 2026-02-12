@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { LoaderCircle } from "lucide-react";
 import CardSkeleton from "@/skeleton/CardSkeleton";
 import { apiBaseUrl } from "@/utils/common";
 import { useCart } from "@/context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const MandatoryCourse = ({
   title,
@@ -16,6 +16,7 @@ const MandatoryCourse = ({
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { purchasedCourses } = useAuth();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -34,6 +35,10 @@ const MandatoryCourse = ({
   const isInCart = (courseId) => {
     return cart.some((item) => item.id === courseId);
   };
+  const isPurchased = (courseId) => {
+    return purchasedCourses.some((order) => order.courseId === courseId);
+  };
+
   const filteredCourses = useMemo(() => {
     if (!courses || courses.length === 0) return [];
 
@@ -48,17 +53,14 @@ const MandatoryCourse = ({
     });
   }, [courses, search, filter]);
 
-
   return (
     <div className="bg-[#F0F7FF] py-10 md:py-16">
       <div className="text-center px-4 mb-6 md:mb-10">
         <h1 className="text-black text-xl md:text-3xl font-bold leading-tight">
-          {/* Mandatory Trainings */}
           {title}
         </h1>
         {description && (
           <h3 className="text-gray-600 text-sm md:text-[22px] mt-2">
-            {/* Get certified in essential DOT compliance areas */}
             {description}
           </h3>
         )}
@@ -71,6 +73,8 @@ const MandatoryCourse = ({
           <div className="grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCourses?.map((course) => {
               const itemExists = isInCart(course.id);
+              const alreadyPurchased = isPurchased(course.id);
+
               return (
                 <div
                   key={course.id}
@@ -80,7 +84,7 @@ const MandatoryCourse = ({
                     <img
                       src={course.image}
                       alt={course.title}
-                      className="w-full h-full object-cover"
+                      className="w-full  aspect-video object-cover"
                       onError={(e) =>
                         (e.target.src = "https://via.placeholder.com/400x200")
                       }
@@ -108,19 +112,27 @@ const MandatoryCourse = ({
 
                       <button
                         onClick={() => {
-                          if (itemExists) {
-                            navigate("/cart");
+                          if (alreadyPurchased) {
+                            navigate("/course/${course.id}");
+                          } else if (itemExists) {
+                            navigate("./cart");
                           } else {
                             addToCart(course);
                           }
                         }}
-                        className={`w-full bg-blue-800 text-white py-2.5 rounded-xl active:scale-95 transition-all font-bold text-sm md:text-base cursor-pointer shadow-lg ${
-                          itemExists
-                            ? "bg-green-600 hover:bg-green-800 text-white"
-                            : "bg-blue-800 hover:bg-blue-900 text-white"
+                        className={`w-full text-white py-2.5 rounded-xl active:scale-95 transition-all font-bold text-sm md:text-base cursor-pointer shadow-lg ${
+                          alreadyPurchased
+                            ? "bg-blue-800 hover:bg-blue-900 text-white"
+                            : itemExists
+                              ? "bg-blue-800 hover:bg-blue-900 text-white"
+                              : "bg-blue-800 hover:bg-blue-900 text-white"
                         } `}
                       >
-                        {itemExists ? "Go to Cart" : "Add to Cart"}
+                        {alreadyPurchased
+                          ? "Start Learning"
+                          : itemExists
+                            ? "Go to Cart"
+                            : "Add to Cart"}
                       </button>
                     </div>
                   </div>

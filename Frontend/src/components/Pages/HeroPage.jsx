@@ -94,7 +94,10 @@ const HeroPage = () => {
 
       <div className="mt-10">
         <Company />
-        <MandatoryCourse title='Mandatory Trainings' description='Get certified in essential DOT compliance areas' />
+        <MandatoryCourse
+          title="Mandatory Trainings"
+          description="Get certified in essential DOT compliance areas"
+        />
         <ComplianceServices />
         <CompliancePage />
         <ContectTeam />

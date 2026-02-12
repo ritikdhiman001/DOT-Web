@@ -15,6 +15,7 @@ import Navbar from "./Navbar-Footer/Navbar";
 import Footer from "./Navbar-Footer/Footer";
 import CoursesPage from "./Courses/CoursesPage";
 import CartPage from "./Courses/CartPage";
+import PurchasesCourse from "./Courses/PurchasesCourse";
 
 const UserLayout = () => (
   <>
@@ -33,6 +34,7 @@ const Navigation = () => {
 
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/insights" element={<InsightsHome />} />
+        <Route path="/purchasescourse" element={<PurchasesCourse />} />
       </Route>
       <Route path="/cart" element={<CartPage />} />
 

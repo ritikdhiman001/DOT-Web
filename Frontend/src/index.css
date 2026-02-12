@@ -2,14 +2,14 @@
 
 html,
 body {
-    overflow-x: hidden;
-    font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
 
 }
 
 .sec-container {
-    max-width: 80%;
-    margin: 0 auto;
+  max-width: 80%;
+  margin: 0 auto;
 }
 
 @keyframes fadeInUp {
@@ -17,6 +17,7 @@ body {
     transform: translateY(100%);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0%);
     opacity: 1;
@@ -27,11 +28,6 @@ body {
   animation: 1.5s fadeInUp;
 }
 
-/*
-Source - https://stackoverflow.com/a/39669911
-Posted by DigitalDesignDj
-Retrieved 2026-02-08, License - CC BY-SA 3.0
-*/
 .fade-up {
   opacity: 0;
   transform: translateY(20px);
@@ -49,18 +45,17 @@ Retrieved 2026-02-08, License - CC BY-SA 3.0
   0% {
     background-position: -500px 0;
   }
+
   100% {
     background-position: 500px 0;
   }
 }
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    #e5e7eb 25%,
-    #f3f4f6 37%,
-    #e5e7eb 63%
-  );
+  background: linear-gradient(90deg,
+      #e5e7eb 25%,
+      #f3f4f6 37%,
+      #e5e7eb 63%);
   background-size: 1000px 100%;
   animation: shimmer 1.4s infinite linear;
 }

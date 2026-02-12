@@ -21,6 +21,8 @@ model User {
   role     Role    @default(USER)
   isActive Boolean @default(true)
 
+  orders Order[]
+
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
@@ -42,13 +44,20 @@ model Contact {
 }
 
 model Course {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
   description String
   price       Int
-  type        String // Free | Paid
+  type        CourseType
   image       String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
+
+  orders Order[]
+}
+
+enum CourseType {
+  FREE
+  PAID
 }
 
 model Blog {
@@ -59,4 +68,27 @@ model Blog {
   description String
   author      String
   createAt    DateTime @default(now())
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  userId   String
+  courseId Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  amount Int
+  status OrderStatus @default(PAID)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+enum OrderStatus {
+  PAID
+  PENDING
+  FAILED
 }

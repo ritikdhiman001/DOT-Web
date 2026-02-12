@@ -49,16 +49,28 @@ const Navbar = () => {
             )}
           </Link>
           {isAuthorization ? (
-            <div className="relative group">
+            <div className="relative group py-2">
               <IoPersonCircle className="text-3xl text-blue-900 cursor-pointer" />
+              <div
+                className="absolute right-0 mt-2 w-40 bg-white text-black rounded-xl 
+                    opacity-0 invisible group-hover:opacity-100 group-hover:visible 
+                    transition-all duration-300 ease-in-out shadow-lg z-50"
+              >
+                <div className="flex flex-col p-2">
+                  <Link
+                    to="/purchasescourse"
+                    className="block w-full px-4 py-2 text-sm rounded-lg hover:bg-gray-100 hover:text-black transition"
+                  >
+                    My Course
+                  </Link>
 
-              <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-xl opacity-0 group-hover:opacity-100 transition">
-                <button
-                  onClick={logout}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                >
-                  Logout
-                </button>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 text-sm rounded-lg hover:bg-red-600 hover:text-white transition cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
@@ -130,19 +142,42 @@ const Navbar = () => {
 
           <div className="grid grid-cols-2 gap-3 pt-6">
             {isAuthorization ? (
-              <button
-                onClick={() => {
-                  logout();
-                  setIsOpen(false);
-                }}
-                className="bg-red-100 text-red-600 px-4 py-3 rounded-2xl font-bold"
-              >
-                Logout
-              </button>
+              <>
+                <Link
+                  to="/purchasescourse"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-blue-100 text-blue-900 px-4 py-3 rounded-2xl font-bold text-center"
+                >
+                  My Course
+                </Link>
+
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsOpen(false);
+                  }}
+                  className="bg-red-100 text-red-600 px-4 py-3 rounded-2xl font-bold"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <>
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-blue-900 text-white px-4 py-3 rounded-2xl text-center"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="bg-blue-900 text-white px-4 py-3 rounded-2xl text-center"
+                >
+                  Register
+                </Link>
               </>
             )}
           </div>
