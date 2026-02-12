@@ -69,7 +69,7 @@ const NewsUpdates = () => {
                   </p>
                   <p className="flex items-center gap-1">
                     <Calendar size={16} className="text-blue-800" />
-                    {formatDate(e.createAt)}
+                    {formatDate(e.createdAt)}
                   </p>
                 </div>
 

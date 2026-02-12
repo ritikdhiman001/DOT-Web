@@ -72,10 +72,7 @@ const Register = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await axios.post(
-        `${apiBaseUrl}/api/register`,
-        formData,
-      );
+      const res = await axios.post(`${apiBaseUrl}/api/register`, formData);
       toast.success(res.data.message);
       setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
@@ -88,7 +85,6 @@ const Register = () => {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-4">
       <div className="w-full max-w-6xl mb-4">

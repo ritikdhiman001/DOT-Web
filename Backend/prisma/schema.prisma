@@ -23,8 +23,8 @@ model User {
 
   orders Order[]
 
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
@@ -33,14 +33,14 @@ enum Role {
 }
 
 model Contact {
-  id       Int      @id @default(autoincrement())
-  fullName String
-  email    String
-  company  String?
-  phone    String?
-  subject  String
-  message  String
-  createAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  email     String
+  company   String?
+  phone     String?
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
 }
 
 model Course {
@@ -67,7 +67,7 @@ model Blog {
   title       String
   description String
   author      String
-  createAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model Order {

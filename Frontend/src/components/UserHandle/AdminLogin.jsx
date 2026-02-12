@@ -31,10 +31,7 @@ export function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${apiBaseUrl}/api/admin/login`,
-        formData,
-      );
+      const res = await axios.post(`${apiBaseUrl}/api/admin/login`, formData);
       localStorage.setItem("AdminToken", res.data.token);
       localStorage.setItem("role", res.data.admin.role.toLowerCase());
       toast.success("Welcome back, Admin!");

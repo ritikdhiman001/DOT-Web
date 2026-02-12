@@ -25,56 +25,56 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
-  export const adminlogin = async (req, res) => {
-    try {
-      const { email, password } = req.body;
+export const adminlogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-      const admin = await prisma.user.findUnique({
-        where: { email },
-      });
+    const admin = await prisma.user.findUnique({
+      where: { email },
+    });
 
-      if (!admin) {
-        return res.status(404).json({
-          success: false,
-          message: "Admin is not found",
-        });
-      }
-      if (admin.role !== "ADMIN") {
-        return res.status(403).json({
-          success: false,
-          message: "Access Denied",
-        });
-      }
-
-      const matchPass = await bcrypt.compare(password, admin.password);
-
-      if (!matchPass) {
-        return res.status(401).json({
-          success: false,
-          message: "Invaild Credentails",
-        });
-      }
-
-      const token = jwt.sign(
-        { id: admin.id, role: admin.role },
-        process.env.ADMIN_JWT_TOKEN,
-        { expiresIn: "1d" },
-      );
-
-      return res.status(200).json({
-        message: "Admin Login Successfully",
-        token,
-        admin: {
-          id: admin.id,
-          email: admin.email,
-          role: admin.role,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
+    if (!admin) {
+      return res.status(404).json({
         success: false,
-        error: error.message,
+        message: "Admin is not found",
       });
     }
-  };
+    if (admin.role !== "ADMIN") {
+      return res.status(403).json({
+        success: false,
+        message: "Access Denied",
+      });
+    }
+
+    const matchPass = await bcrypt.compare(password, admin.password);
+
+    if (!matchPass) {
+      return res.status(401).json({
+        success: false,
+        message: "Invaild Credentails",
+      });
+    }
+
+    const token = jwt.sign(
+      { id: admin.id, role: admin.role },
+      process.env.ADMIN_JWT_TOKEN,
+      { expiresIn: "1d" },
+    );
+
+    return res.status(200).json({
+      message: "Admin Login Successfully",
+      token,
+      admin: {
+        id: admin.id,
+        email: admin.email,
+        role: admin.role,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

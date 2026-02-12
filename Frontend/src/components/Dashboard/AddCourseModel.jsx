@@ -14,7 +14,7 @@ const AddCourseModal = ({ close, refresh }) => {
     title: "",
     description: "",
     price: "",
-    type: "Free",
+    type: "FREE",
   });
 
   const handleImageChange = async (e) => {
@@ -56,7 +56,7 @@ const AddCourseModal = ({ close, refresh }) => {
         {
           ...form,
           image: imageUrl,
-          price: form.type === "Free" ? 0 : form.price,
+          price: form.type === "FREE" ? 0 : form.price,
         },
         {
           headers: {
@@ -169,8 +169,8 @@ const AddCourseModal = ({ close, refresh }) => {
                 className="w-full border border-gray-300 p-2.5 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
               >
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
+                <option value="FREE">Free</option>
+                <option value="PAID">Paid</option>
               </select>
             </div>
 
