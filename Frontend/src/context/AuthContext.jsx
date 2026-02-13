@@ -1,3 +1,4 @@
+import { apiBaseUrl } from "@/utils/common";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext();
@@ -27,7 +28,7 @@ export const AuthoProvider = ({ children }) => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/order/course", {
+      const res = await axios.get(`${apiBaseUrl}/api/order/course`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

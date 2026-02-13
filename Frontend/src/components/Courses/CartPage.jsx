@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoTrashOutline, IoAdd, IoRemove, IoArrowBack } from "react-icons/io5";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { apiBaseUrl } from "@/utils/common";
 
 const CartPage = () => {
   const { cart, addToCart, removeFromCart, decrementQuantity, clearCart } =
@@ -21,7 +22,7 @@ const CartPage = () => {
 
       for (const item of cart) {
         await axios.post(
-          `http://localhost:5000/api/order/buy`,
+          `${apiBaseUrl}/api/order/buy`,
           { courseId: item.id },
           {
             headers: {
