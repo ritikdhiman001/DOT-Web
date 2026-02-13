@@ -6,6 +6,8 @@ import {
   deleteUser,
   editUser,
   getAllUsers,
+  getCoursePurchases,
+  specificUser,
 } from "../controller/admin/adminUserController.js";
 import {
   adminlogin,
@@ -40,13 +42,22 @@ routes.post("/admin/login", adminlogin);
 routes.get("/admin/users", adminTokenVerify, getAllUsers);
 routes.get("/admin/dashboard-stats", adminTokenVerify, getDashboardStats);
 
+// ================= COURSES =================
 routes.post("/admin/courses", adminTokenVerify, addCourse);
 routes.put("/admin/updateCourse/:id", adminTokenVerify, updateCourse);
 routes.delete("/admin/deleteCourse/:id", adminTokenVerify, deleteCourse);
+routes.get(
+  "/admin/getCoursePurchases/:id",
+  adminTokenVerify,
+  getCoursePurchases,
+);
+// ================= USER =================
 
 routes.put("/admin/updateUser/:id", adminTokenVerify, editUser);
 routes.delete("/admin/userDelete/:id", adminTokenVerify, deleteUser);
+routes.get("/admin/specificUser/:id", adminTokenVerify, specificUser);
 
+// ================= BLOG =================
 routes.post("/admin/addblog", adminTokenVerify, addBlog);
 routes.get("/admin/getblog", getBlog);
 routes.put("/admin/updateBlog/:id", adminTokenVerify, updateBlog);

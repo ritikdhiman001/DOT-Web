@@ -13,19 +13,17 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (course) => {
-    const existing = cart.find((item) => item.id === course.id);
-
-    if (existing) {
-      setCart(
-        cart.map((item) =>
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === course.id);
+      if (existing) {
+        return prev.map((item) =>
           item.id === course.id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
-        ),
-      );
-    } else {
-      setCart([...cart, { ...course, quantity: 1 }]);
-    }
+        );
+      }
+      return [...prev, { ...course, quantity: 1 }];
+    });
   };
 
   const decrementQuantity = (courseId) => {
@@ -41,11 +39,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
-  const clearCart = () => {
-    setCart([]);
-  };
+
+  const clearCart = () => setCart([]);
 
   return (
     <CartContext.Provider

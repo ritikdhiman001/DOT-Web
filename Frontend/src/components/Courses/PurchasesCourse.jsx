@@ -1,14 +1,22 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { LoaderCircle } from "lucide-react";
 
 const PurchasesCourse = () => {
-  const { purchasedCourses } = useAuth();
-
+  const { purchasedCourses, loading } = useAuth();
   const courses = purchasedCourses?.map((order) => order.course) || [];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <LoaderCircle size={60} className="animate-spin text-blue-700" />
+      </div>
+    );
+  }
 
   if (courses.length === 0) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-50 px-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-6">
         <div className="text-7xl md:text-9xl mb-6 animate-bounce">🎓</div>
         <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-3 text-center">
           No Courses Yet

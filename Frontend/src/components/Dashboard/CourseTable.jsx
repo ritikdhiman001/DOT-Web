@@ -1,6 +1,29 @@
+import { apiBaseUrl } from "@/utils/common";
+import axios from "axios";
 import { LoaderCircle, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
+  const [courseUser, setCourseUser] = useState([]);
+  const [openModel, setOpenModel] = useState(false);
+
+  const fetchCourseUser = async (courseId) => {
+    try {
+      const res = await axios.get(
+        `${apiBaseUrl}/api/admin/getCoursePurchases/${courseId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("AdminToken")} `,
+          },
+        },
+      );
+      setCourseUser(res.data.data);
+      setOpenModel(true);
+    } catch (error) {
+      console.error("Failed to fetch course users", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -27,7 +50,10 @@ const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
                 Sr No
               </th>
               <th className="p-4 text-xs font-bold text-gray-500 uppercase">
-                Course
+                Image
+              </th>
+              <th className="p-4 text-xs font-bold text-gray-500 uppercase">
+                Title
               </th>
               <th className="p-4 text-xs font-bold text-gray-500 uppercase">
                 Type
@@ -57,10 +83,13 @@ const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
                         (e.target.src = "https://via.placeholder.com/150")
                       }
                     />
-                    <span className="font-semibold text-gray-800 line-clamp-1">
-                      {course.title}
-                    </span>
                   </div>
+                </td>
+                <td
+                  className="text-[16px] font-medium hover:underline cursor-pointer"
+                  onClick={() => fetchCourseUser(course.id)}
+                >
+                  {course.title}
                 </td>
                 <td className="p-4">
                   <span
@@ -153,6 +182,37 @@ const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
           </div>
         ))}
       </div>
+      {openModel && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white w-150 max-h-[80vh] overflow-y-auto rounded-xl p-6">
+            <h3 className="text-lg font-bold mb-4">
+              {" "}
+              Users Who Purchased This Course
+            </h3>
+            {courseUser.length === 0 ? (
+              <p className="text-gray-500">No Purchased By Any User </p>
+            ) : (
+              courseUser.map((purchase, idx) => (
+                <div key={idx} className="border-b py-3">
+                  <h4 className="font-semibold">
+                    {purchase.user.firstName} {purchase.user.lastName}
+                  </h4>
+                  <p className="text-sm text-gray-500">{purchase.user.email}</p>
+                  <p className="text-xs text-gray-400"> ₹{purchase.amount}</p>
+                </div>
+              ))
+            )}
+            <div className="flex justify-center">
+              <button
+                onClick={() => setOpenModel(false)}
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-xl cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

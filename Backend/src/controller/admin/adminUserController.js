@@ -78,3 +78,79 @@ export const editUser = async (req, res) => {
     });
   }
 };
+
+export const specificUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const userWithOrders = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        orders: {
+          select: {
+            amount: true,
+            status: true,
+            createdAt: true,
+
+            course: {
+              select: {
+                title: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!userWithOrders) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User Fetch Successful",
+      data: userWithOrders,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const getCoursePurchases = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const purchases = await prisma.order.findMany({
+      where: {
+        courseId: parseInt(id),
+      },
+      select: {
+        amount: true,
+        createdAt: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      data: purchases,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

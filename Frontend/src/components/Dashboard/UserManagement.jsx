@@ -9,6 +9,25 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserOrders, setSelectedUserOrders] = useState([]);
+  const [openOrdersModel, setOpenOrdersModel] = useState(false);
+
+  const fetchUserWithOrders = async (id) => {
+    try {
+      const res = await axios.get(
+        `${apiBaseUrl}/api/admin/specificUser/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("AdminToken")}`,
+          },
+        },
+      );
+      setSelectedUserOrders(res.data.data.orders);
+      setOpenOrdersModel(true);
+    } catch (error) {
+      console.error("Failed to fetch specific user", error);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -97,7 +116,10 @@ const UserManagement = () => {
                   <td className="p-4 text-sm font-mono font-medium text-blue-600">
                     {user.dotNumber}
                   </td>
-                  <td className="p-4 text-sm text-gray-700">
+                  <td
+                    onClick={() => fetchUserWithOrders(user.id)}
+                    className="p-4 text-sm text-gray-700 cursor-pointer hover:underline"
+                  >
                     {user.firstName} {user.lastName}
                     <div className="text-xs text-gray-400 mt-0.5">
                       {user.phone}
@@ -182,6 +204,44 @@ const UserManagement = () => {
           </div>
         ))}
       </div>
+
+      {openOrdersModel && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white w-125 max-h-[80vh] overflow-y-auto rounded-xl p-6">
+            <h3 className="text-lg font-bold mb-4">Purchased Course</h3>
+            {selectedUserOrders.length === 0 ? (
+              <p className="text-gray-500">No Purchases Course Found</p>
+            ) : (
+              selectedUserOrders.map((order, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 border-b py-3"
+                >
+                  <img
+                    src={order.course.image}
+                    alt={order.course.title}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <div>
+                    <h4 className="font-semibold">{order.course.title}</h4>
+                    <p className="text-sm text-gray-500">
+                      ${order.amount} | {order.status}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+            <div className="flex justify-center">
+              <button
+                onClick={() => setOpenOrdersModel(false)}
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-xl cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {openEdit && selectedUser && (
         <EditUserModal

@@ -115,7 +115,7 @@ const MandatoryCourse = ({
                           if (alreadyPurchased) {
                             navigate("/course/${course.id}");
                           } else if (itemExists) {
-                            navigate("./cart");
+                            navigate("/cart");
                           } else {
                             addToCart(course);
                           }

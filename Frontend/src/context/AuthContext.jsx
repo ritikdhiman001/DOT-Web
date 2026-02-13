@@ -6,12 +6,15 @@ export const AuthoProvider = ({ children }) => {
   const [isAuthorization, setIsAuthorization] = useState(false);
   const [purchasedCourses, setPurchasedCourses] = useState([]);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
       setIsAuthorization(true);
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -22,6 +25,7 @@ export const AuthoProvider = ({ children }) => {
   }, [token]);
 
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/api/order/course", {
         headers: {
@@ -31,6 +35,8 @@ export const AuthoProvider = ({ children }) => {
       setPurchasedCourses(res.data.data);
     } catch (error) {
       console.error("Error Fetch Orders ", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,7 +55,7 @@ export const AuthoProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthorization, login, logout, purchasedCourses }}
+      value={{ isAuthorization, login, logout, purchasedCourses, loading }}
     >
       {children}
     </AuthContext.Provider>

@@ -140,7 +140,7 @@ const BlogPage = () => {
                       </span>
                     </td>
                     <td className="p-4 text-sm text-gray-500">
-                      {formatDate(blog.createAt)}
+                      {formatDate(blog.createdAt)}
                     </td>
                     <td className="p-4">
                       <div className="flex justify-center gap-3">
@@ -200,7 +200,7 @@ const BlogPage = () => {
                     <User size={14} /> {blog.author}
                   </div>
                   <div className="flex items-center gap-1">
-                    <Calendar size={14} /> {formatDate(blog.createAt)}
+                    <Calendar size={14} /> {formatDate(blog.createdAt)}
                   </div>
                 </div>
               </div>

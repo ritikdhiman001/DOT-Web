@@ -51,7 +51,7 @@ const NewsUpdates = () => {
                 </div>
 
                 <div className="text-left">
-                  <h1 className="text-[18px] md:text-[20px] font-bold mb-2 leading-tight">
+                  <h1 className="text-[18px] md:text-[19px] font-bold mb-2 leading-tight">
                     {e.title}
                   </h1>
                   <p className="text-gray-600 text-[14px] md:text-[16px] line-clamp-3">
