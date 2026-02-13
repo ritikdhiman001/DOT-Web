@@ -167,7 +167,10 @@ const UserManagement = () => {
                 <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">
                   DOT: {user.dotNumber}
                 </span>
-                <h3 className="font-bold text-gray-800">
+                <h3
+                  className="font-bold text-gray-800"
+                  onClick={() => fetchUserWithOrders(user.id)}
+                >
                   {user.firstName} {user.lastName}
                 </h3>
               </div>
@@ -206,35 +209,49 @@ const UserManagement = () => {
       </div>
 
       {openOrdersModel && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white w-125 max-h-[80vh] overflow-y-auto rounded-xl p-6">
-            <h3 className="text-lg font-bold mb-4">Purchased Course</h3>
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
+          {/* 1. Changed w-125 to w-full max-w-md for responsiveness.
+      2. Added p-4 to the overlay to prevent the modal from touching screen edges. 
+    */}
+          <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 shadow-xl">
+            <h3 className="text-lg font-bold mb-4">Purchased Courses</h3>
+
             {selectedUserOrders.length === 0 ? (
-              <p className="text-gray-500">No Purchases Course Found</p>
+              <p className="text-gray-500 text-center py-10">
+                No Purchased Courses Found
+              </p>
             ) : (
-              selectedUserOrders.map((order, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 border-b py-3"
-                >
-                  <img
-                    src={order.course.image}
-                    alt={order.course.title}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div>
-                    <h4 className="font-semibold">{order.course.title}</h4>
-                    <p className="text-sm text-gray-500">
-                      ${order.amount} | {order.status}
-                    </p>
+              <div className="space-y-1">
+                {selectedUserOrders.map((order, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 border-b last:border-0 py-4"
+                  >
+                    {/* Responsive Image size */}
+                    <img
+                      src={order.course.image}
+                      alt={order.course.title}
+                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-semibold text-gray-900 truncate">
+                        {order.course.title}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        ${order.amount} •{" "}
+                        <span className="capitalize">{order.status}</span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
-            <div className="flex justify-center">
+
+            <div className="flex justify-center sticky bottom-0 bg-white pt-4">
               <button
                 onClick={() => setOpenOrdersModel(false)}
-                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-xl cursor-pointer"
+                className="w-full sm:w-auto px-8 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-colors cursor-pointer"
               >
                 Close
               </button>
