@@ -4,18 +4,20 @@ import { IoTrashOutline, IoAdd, IoRemove, IoArrowBack } from "react-icons/io5";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { apiBaseUrl } from "@/utils/common";
+import { useAuth } from "@/context/AuthContext";
 
 const CartPage = () => {
   const { cart, addToCart, removeFromCart, decrementQuantity, clearCart } =
     useCart();
   const navigate = useNavigate();
+  const { fetchOrders } = useAuth();
 
   const handleCheckout = async () => {
     try {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        toast.error("Please login first");
+        toast.error("Please Login First");
         navigate("/login");
         return;
       }
@@ -31,8 +33,10 @@ const CartPage = () => {
           },
         );
       }
+      await fetchOrders();
+      clearCart();
 
-      toast.success("Courses purchased successfully 🎉");
+      toast.success("Courses Purchased Successfully 🎉");
       clearCart();
       navigate("/purchasescourse");
     } catch (error) {
