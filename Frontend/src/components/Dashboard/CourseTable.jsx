@@ -135,7 +135,7 @@ const CourseTable = ({ courses, onDelete, onEdit, loading }) => {
             <div className="p-4">
               <div className="flex gap-4">
                 {/* Image with fixed aspect ratio to prevent layout shift */}
-                <div className="relative w-24 h-20 flex-shrink-0">
+                <div className="relative w-24 h-20 shrink-0">
                   <img
                     src={course.image}
                     alt={course.title}

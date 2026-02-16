@@ -80,7 +80,11 @@ model Order {
   course Course @relation(fields: [courseId], references: [id])
 
   amount Int
-  status OrderStatus @default(PAID)
+  status OrderStatus @default(PENDING)
+
+  razorpayOrderId String?
+  paymentId       String?
+  signature       String?
 
   createdAt DateTime @default(now())
 

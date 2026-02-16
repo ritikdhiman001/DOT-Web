@@ -26,7 +26,7 @@ import {
   getBlog,
   updateBlog,
 } from "../controller/admin/blogController.js";
-import { buyCourse, getOrder } from "../controller/admin/orderController.js";
+import { getOrder } from "../controller/admin/orderController.js";
 
 const routes = express.Router();
 
@@ -64,7 +64,8 @@ routes.put("/admin/updateBlog/:id", adminTokenVerify, updateBlog);
 routes.delete("/admin/deleteBlog/:id", adminTokenVerify, deleteBlog);
 
 // ================= ORDERS =================
-routes.post("/order/buy", verifyToken, buyCourse);
 routes.get("/order/course", verifyToken, getOrder);
+
+// ================= PAYMENTS =================
 
 export default routes;

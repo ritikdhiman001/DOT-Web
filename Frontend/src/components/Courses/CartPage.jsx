@@ -22,25 +22,71 @@ const CartPage = () => {
         return;
       }
 
-      for (const item of cart) {
-        await axios.post(
-          `${apiBaseUrl}/api/order/buy`,
-          { courseId: item.id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+      if (cart.length === 0) {
+        toast.error("Cart is Empty");
+        return;
       }
-      await fetchOrders();
-      clearCart();
 
-      toast.success("Courses Purchased Successfully 🎉");
-      clearCart();
-      navigate("/purchasescourse");
+      const { data } = await axios.post(
+        `${apiBaseUrl}/api/payment/create-order`,
+        {
+          courseId: cart[0].id,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (data.free) {
+        await fetchOrders();
+        clearCart();
+        toast.success("Enrolled Successfull ");
+        navigate("/purchasescourse");
+        return;
+      }
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: data.order.amount,
+        currency: "INR",
+        name: "Ritik Academy",
+        description: "Course Purchase",
+        order_id: data.order.id,
+
+        handler: async function (response) {
+          await axios.post(
+            `${apiBaseUrl}/api/payment/verify`,
+            {
+              ...response,
+              courseId: cart[0].id,
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+
+          await fetchOrders();
+          clearCart();
+          toast.success("Courses Purchased Successfully 🎉");
+
+          console.log("Payment success, redirecting...");
+          navigate("/purchasescourse");
+        },
+
+        theme: {
+          color: "#1e3a8a",
+        },
+      };
+
+      if (!window.Razorpay) {
+        toast.error("Payment SDK failed to load");
+        return;
+      }
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Checkout failed");
+      toast.error(error?.response?.data?.message || "Payment failed");
     }
   };
 

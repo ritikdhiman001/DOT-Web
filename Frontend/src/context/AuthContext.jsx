@@ -3,7 +3,7 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext();
 
-export const AuthoProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [isAuthorization, setIsAuthorization] = useState(false);
   const [purchasedCourses, setPurchasedCourses] = useState([]);
   const [token, setToken] = useState(null);
@@ -11,12 +11,12 @@ export const AuthoProvider = ({ children }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+
     if (storedToken) {
       setToken(storedToken);
       setIsAuthorization(true);
-    } else {
-      setLoading(false);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -28,14 +28,22 @@ export const AuthoProvider = ({ children }) => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) return;
+
       const res = await axios.get(`${apiBaseUrl}/api/order/course`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${storedToken}`,
         },
       });
-      setPurchasedCourses(res.data.data);
+
+      console.log("Purchased:", res.data);
+      setPurchasedCourses(res.data.data || []);
     } catch (error) {
-      console.error("Error Fetch Orders ", error.message);
+      console.error(
+        "Error Fetch Orders ",
+        error.response?.data || error.message,
+      );
     } finally {
       setLoading(false);
     }
