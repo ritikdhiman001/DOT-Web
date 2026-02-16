@@ -27,6 +27,7 @@ import {
   updateBlog,
 } from "../controller/admin/blogController.js";
 import { getOrder } from "../controller/admin/orderController.js";
+import { getAllPayments } from "../controller/admin/paymentController.js";
 
 const routes = express.Router();
 
@@ -65,7 +66,6 @@ routes.delete("/admin/deleteBlog/:id", adminTokenVerify, deleteBlog);
 
 // ================= ORDERS =================
 routes.get("/order/course", verifyToken, getOrder);
-
-// ================= PAYMENTS =================
+routes.get("/admin/payments", adminTokenVerify, getAllPayments);
 
 export default routes;

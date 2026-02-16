@@ -16,6 +16,7 @@ import Footer from "./Navbar-Footer/Footer";
 import CoursesPage from "./Courses/CoursesPage";
 import CartPage from "./Courses/CartPage";
 import PurchasesCourse from "./Courses/PurchasesCourse";
+import AdminPayments from "./Dashboard/AdminPayments";
 
 const UserLayout = () => (
   <>
@@ -50,6 +51,7 @@ const Navigation = () => {
           <Route path="users" element={<UserManagement />} />
           <Route path="courses" element={<CourseManagement />} />
           <Route path="blogs" element={<BlogPage />} />
+          <Route path="payments" element={<AdminPayments />} />
         </Route>
       </Route>
 

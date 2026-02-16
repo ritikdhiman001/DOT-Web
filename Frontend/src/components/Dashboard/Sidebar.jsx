@@ -8,6 +8,7 @@ import {
   Menu,
   X,
   LogOut,
+  CircleDollarSign,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -27,6 +28,7 @@ const Sidebar = () => {
     { to: "/admin/users", icon: <Users size={20} />, label: "Users" },
     { to: "/admin/courses", icon: <BookCheck size={20} />, label: "Courses" },
     { to: "/admin/blogs", icon: <MailOpen size={20} />, label: "Blogs" },
+    { to: "/admin/payments", icon: <CircleDollarSign />, label: "Sale" },
   ];
 
   return (
