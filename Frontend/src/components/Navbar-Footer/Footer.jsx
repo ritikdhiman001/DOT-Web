@@ -48,7 +48,7 @@ const Footer = () => {
             </h3>
             <ul className="space-y-4 md:text-[20px] text-[16px] inline-block md:block text-left">
               <li className="flex items-center gap-3">
-                <Phone className="h-5 md:h-7 shrink-0" /> (307) 429-4946
+                <Phone className="h-5 md:h-7 shrink-0" />7696126769 
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 md:h-7 shrink-0" /> info@dotcouncil.org

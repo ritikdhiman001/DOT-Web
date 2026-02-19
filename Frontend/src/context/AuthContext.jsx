@@ -36,8 +36,6 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${storedToken}`,
         },
       });
-
-      console.log("Purchased:", res.data);
       setPurchasedCourses(res.data.data || []);
     } catch (error) {
       console.error(

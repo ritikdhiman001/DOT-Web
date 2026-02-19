@@ -68,8 +68,6 @@ const CartPage = () => {
           await fetchOrders();
           clearCart();
           toast.success("Courses Purchased Successfully 🎉");
-
-          console.log("Payment success, redirecting...");
           navigate("/purchasescourse");
         },
 
